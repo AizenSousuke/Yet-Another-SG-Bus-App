@@ -30,7 +30,7 @@ const Auth = async (req, res, next) => {
 		console.log("Auth User: " + JSON.stringify(user));
 
 		if (!user) {
-			console.log("User is not found. Returning 401.")
+			console.log("User with token is not found. Returning 401.")
 			return res.status(401).json({
 				msg: "Token is not valid. It might have expired. Please relogin.",
 			});

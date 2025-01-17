@@ -19,8 +19,8 @@ router.get('/test', async (req: any, res) => {
  */
 router.get("/", authMiddleware, async (req: any, res) => {
 	try {
-		// console.log("Getting auth");
-		// console.log("Type of UserId: ", typeof req.user.UserId);
+		console.log("Getting auth");
+		console.log("Type of UserId: ", typeof req.user.UserId);
 		// console.log("User: ", await UserModel.findOne({UserId: req.user.UserId}));
 		const user = await prisma.user.findFirst({
 			where: {
@@ -63,9 +63,22 @@ router.get(
 			"Req isAuthenticated from facebook callback: " +
 			req.isAuthenticated()
 		);
-		req.session.save((error) => {
+		req.session.save(async (error) => {
 			console.log(`Backend config FRONTEND_LINK is: ${config.FRONTEND_LINK}`)
 			console.log(`Backend req.user is: ${JSON.stringify(req.user)}`)
+
+			// Update user token
+			console.log("Updating user token");
+			await prisma.user.update({
+				where: {
+					email: req.user.email
+				},
+				data: {
+					token: req.user.token
+				}
+			});
+			console.log("Done updating user token");
+
 			const redirectURL =
 				(process.env.FRONTEND_LINK ?? config.FRONTEND_LINK) +
 				`?token=${req.user.token}`;
@@ -192,6 +205,8 @@ router.post(
 					expirationDate.setSeconds(
 						expirationDate.getSeconds() + tokenExpiresIn
 					);
+
+					console.log("Updating user with new token");
 
 					// Save token to user entity in db
 					await prisma.user.update({
