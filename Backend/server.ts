@@ -74,6 +74,7 @@ passport.use(
 		async (accessToken, refreshToken, profile, cb) => {
 			// Save the accessToken and refreshToken if you need to call facebook apis later on
 			console.log("Profile: " + JSON.stringify(profile));
+			console.log("Email: " + JSON.stringify(profile.emails[0].value));
 			console.log("Access Token: " + accessToken);
 			// FB does not provide refresh token. So it should be undefined.
 			console.log("Refresh Token: " + refreshToken);
@@ -144,9 +145,10 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (user, done) => {
 	try {
+		console.log(`Getting user: ${JSON.stringify(user)}`)
 		const prismaUser = await prisma.user.findUniqueOrThrow({
 			where: {
-				id: user.UserId
+				email: user.email
 			}
 		});
 		done(null, prismaUser);

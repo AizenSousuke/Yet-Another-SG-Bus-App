@@ -64,9 +64,11 @@ router.get(
 			req.isAuthenticated()
 		);
 		req.session.save((error) => {
+			console.log(`Backend config FRONTEND_LINK is: ${config.FRONTEND_LINK}`)
+			console.log(`Backend req.user is: ${JSON.stringify(req.user)}`)
 			const redirectURL =
 				(process.env.FRONTEND_LINK ?? config.FRONTEND_LINK) +
-				`?token=${req.user.Token}`;
+				`?token=${req.user.token}`;
 			console.log("Redirecting to frontend link " + redirectURL);
 			return res.status(302).redirect(
 				// Redirect back to app
