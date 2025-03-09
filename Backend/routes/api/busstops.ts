@@ -94,22 +94,22 @@ router.get("/nearest", async (req, res) => {
 
 		// Search for bus stops nearby
 		// Reference: https://docs.mongodb.com/manual/reference/operator/query/near/#mongodb-query-op.-near
-		// TODO: Fix issues
-		const busStopsNearby = await prisma.$runCommandRaw({
-			filter: {
-				location: {
-					$near: {
-						$geometry: {
+		const busStopsNearby = await prisma.busStop.aggregateRaw({
+			pipeline: [
+				{
+					$geoNear: {
+						near: {
 							type: "Point",
-							coordinates: [req.query.longitude, req.query.latitude],
+							coordinates: [parseFloat(String(req.query.longitude)), parseFloat(String(req.query.latitude))],
 						},
-						$minDistance: 0,
-						$maxDistance: req.query.maxDistance
-							? req.query.maxDistance
+						distanceField: "distance",
+						maxDistance: req.query.maxDistance
+							? parseInt(String(req.query.maxDistance))
 							: config.MAX_DISTANCE_IN_METRES,
+						query: {},
 					},
 				},
-			}
+			],
 		});
 
 		// Nearest bus stop is the first one in the list

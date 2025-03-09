@@ -30,7 +30,7 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         // Prepare the data for `createMany`
         const busStopsData = arrayOfBusStops.map((busStop) => ({
             busStopCode: busStop.BusStopCode,
-            location: JSON.stringify([busStop.Latitude, busStop.Longitude]),
+            location: JSON.stringify([busStop.Longitude, busStop.Latitude]),
             description: busStop.Description,
             roadName: busStop.RoadName
         }));

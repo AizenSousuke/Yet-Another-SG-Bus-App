@@ -73,6 +73,8 @@ export const LocationModal = () => {
 					loc.latitude
 				);
 
+				// console.log(stops.busStopsNearby[0]);
+
 				if (stops.busStopsNearby) {
 					setNearbyBusStops(stops.busStopsNearby);
 				}
@@ -105,15 +107,15 @@ export const LocationModal = () => {
 						nearbyBusStops.map((marker: any, index: number) => (
 							<Marker
 								key={index}
-								identifier={marker.Description}
+								identifier={marker.description}
 								ref={(elem) =>
-									(markerRef.current[marker.BusStopCode] =
+									(markerRef.current[marker.busStopCode] =
 										elem)
 								}
 								title={marker.Description}
 								coordinate={{
-									longitude: marker.Location[0],
-									latitude: marker.Location[1],
+									longitude: marker.location.coordinates[0],
+									latitude: marker.location.coordinates[1],
 								}}
 							/>
 						))}
@@ -148,14 +150,14 @@ export const LocationModal = () => {
 				data={nearbyBusStops}
 				renderItem={({ item }: { item: any }) => (
 					<BusStopListPureComponent
-						name={item.Description}
-						address={item.RoadName}
-						code={item.BusStopCode}
+						name={item.description}
+						address={item.roadName}
+						code={item.busStopCode}
 						CollapseEvent={() => {
 							mapRef.current?.fitToSuppliedMarkers([
-								item.Description,
+								item.description,
 							]);
-							markerRef.current[item.BusStopCode].showCallout();
+							markerRef.current[item.busStopCode].showCallout();
 						}}
 					/>
 				)}
