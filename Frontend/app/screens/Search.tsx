@@ -12,15 +12,15 @@ import BusStopListPureComponent from "../components/BusStopListPureComponent";
 import Constants from "expo-constants";
 
 const options = {
-	keys: ["BusStopCode", "RoadName"],
+	keys: ["busStopCode", "roadName"],
 	minMatchCharLength: 4,
 };
 
 const renderItem = ({ item }) => (
 	<BusStopListPureComponent
-		name={item.Description}
-		address={item.RoadName}
-		code={item.BusStopCode}
+		name={item.description}
+		address={item.roadName}
+		code={item.busStopCode}
 	/>
 );
 
@@ -106,7 +106,7 @@ const Search = () => {
 				maxToRenderPerBatch={limitResultsPerPage}
 				data={busStops}
 				renderItem={renderItem}
-				keyExtractor={(item) => item.BusStopCode}
+				keyExtractor={(item) => item.busStopCode}
 				viewabilityConfig={viewabilityConfig}
 				ListEmptyComponent={
 					loading ? (

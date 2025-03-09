@@ -58,9 +58,11 @@ router.get("/search", async (req, res) => {
 
 		const busStops = await prisma.busStop.findRaw({
 			filter: {
-				description: { $regex: term, $options: "i" },
-				roadName: { $regex: term, $options: "i" },
-				busStopCode: { $regex: term, $options: "i" }
+				$or: [
+					{ description: { $regex: term, $options: "i" } },
+					{ roadName: { $regex: term, $options: "i" } },
+					{ busStopCode: { $regex: term, $options: "i" } }
+				]
 			}
 		});
 
