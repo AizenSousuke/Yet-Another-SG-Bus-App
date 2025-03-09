@@ -122,7 +122,7 @@ passport.use(
 						config.get("TOKEN_EXPIRY_DAYS"))
 				));
 
-				await prisma.user.update({
+				const updatedUser = await prisma.user.update({
 					where: {
 						id: user.id
 					},
@@ -133,7 +133,7 @@ passport.use(
 					}
 				});
 
-				return cb(null, user);
+				return cb(null, updatedUser);
 			}
 		}
 	)

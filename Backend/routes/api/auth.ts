@@ -68,7 +68,7 @@ router.get(
 			console.log(`Backend req.user is: ${JSON.stringify(req.user)}`)
 
 			// Update user token
-			console.log("Updating user token");
+			console.log("Updating user token with: " + req.user.token);
 			await prisma.user.update({
 				where: {
 					email: req.user.email
@@ -77,12 +77,13 @@ router.get(
 					token: req.user.token
 				}
 			});
+
 			console.log("Done updating user token");
 
 			const redirectURL =
 				(process.env.FRONTEND_LINK ?? config.FRONTEND_LINK) +
 				`?token=${req.user.token}`;
-			console.log("Redirecting to frontend link " + redirectURL);
+			console.warn("Redirecting to frontend link " + redirectURL);
 			return res.status(302).redirect(
 				// Redirect back to app
 				redirectURL

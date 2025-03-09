@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { ToastAndroid, View } from "react-native";
 import { Header } from "react-native-elements";
-import { LogOut, SignIn } from "../api/api";
+import { LogOut } from "../api/api";
 import SearchButton from "./SearchButton";
 import TabNavigator from "./TabNavigator";
 import AuthConsumer from "../context/AuthContext";
@@ -11,7 +11,7 @@ import LocationButton from "./LocationButton";
 import ColourScheme from "../settings/colourScheme.json";
 import Constants from "expo-constants";
 import { persistedStore, store } from "../redux/store";
-import { loggedIn, signIn } from "../redux/features/homePage/homePageSlice";
+import { signIn } from "../redux/features/homePage/homePageSlice";
 import { useSelector } from "react-redux";
 import { resetStore } from "../redux/reducers/rootReducer";
 
@@ -88,6 +88,7 @@ export const Home = ({ navigation }: { navigation: any }) => {
 										tokenExpiry?.expired == true
 									) {
 										// Sign in and Get new token
+										console.log("Signing in and getting new token");
 										store.dispatch(signIn());
 									} else {
 										ToastAndroid.show(

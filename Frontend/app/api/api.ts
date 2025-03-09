@@ -237,7 +237,7 @@ export const SignIn = async () => {
 	// If browser is opened
 	if (fblogin) {
 		console.log(
-			"Logged in with FACEBOOK: " +
+			"FACEBOOK browser page opened: " +
 			JSON.stringify(fblogin)
 		);
 	}
@@ -253,7 +253,7 @@ export const CheckTokenExpiry = async (token: string | null) => {
 	console.log("Checking token expiry:" + token);
 	data.headers["X-Auth-Token"] = token;
 	if (!token) {
-		console.log("Default token has expired");
+		console.warn("Default token has expired");
 		return { msg: "Token was not provided.", expired: true };
 	}
 	const result = await axios.get(`${api}/auth/checkTokenExpiry`, data);
