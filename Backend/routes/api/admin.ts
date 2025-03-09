@@ -139,7 +139,7 @@ export async function getPromisesForAllBusStopsFromLTADataMallAPI(res) {
 	let skipBy = 500;
 
 	while (anyMoreDataToParse) {
-		await Util.delay(1000);
+		await Util.delay(100);
 
 		await axios
 			.get(

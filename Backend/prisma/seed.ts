@@ -7,6 +7,7 @@
 import PrismaSingleton from "../classes/PrismaSingleton";
 import { getPromisesForAllBusStopsFromLTADataMallAPI } from "../routes/api/admin";
 import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busroutes";
+import Util from "../util/Util";
 
 (async () => {
     // Using prisma.$transaction to do all db operations in 1 call
@@ -24,13 +25,17 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
 
         console.log("All promises has ran");
 
-        await transaction.busStops.deleteMany({});
-        await transaction.busRoutes.deleteMany({});
+        await transaction.busStop.deleteMany({});
+        await transaction.busRoute.deleteMany({});
 
         // Prepare the data for `createMany`
         const busStopsData = arrayOfBusStops.map((busStop) => ({
             busStopCode: busStop.BusStopCode,
-            location: JSON.stringify([busStop.Latitude, busStop.Longitude]),
+            // location: JSON.stringify([busStop.Longitude, busStop.Latitude]),
+            location: {
+                type: "Point",
+                coordinates: [busStop.Longitude, busStop.Latitude]
+            },
             description: busStop.Description,
             roadName: busStop.RoadName
         }));
@@ -51,17 +56,18 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         }));
 
         // Use createMany to insert the bus stops in bulk
-        await transaction.busStops.createMany({
+        await transaction.busStop.createMany({
             data: busStopsData
         });
 
-        await transaction.busRoutes.createMany({
+
+        await transaction.busRoute.createMany({
             data: busRoutesData
         });
 
         console.log("Seeding completed");
     }, {
         // In ms
-        timeout: 1000 * 60 * 5
+        timeout: 1000 * 60 * 10
     });
 })();

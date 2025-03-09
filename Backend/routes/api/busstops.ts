@@ -95,21 +95,58 @@ router.get("/nearest", async (req, res) => {
 		// Search for bus stops nearby
 		// Reference: https://docs.mongodb.com/manual/reference/operator/query/near/#mongodb-query-op.-near
 		// TODO: Fix issues
+		// const busStopsNearby = await prisma.$runCommandRaw({
+		// 	filter: {
+		// 		location: {
+		// 			$near: {
+		// 				$geometry: {
+		// 					type: "Point",
+		// 					coordinates: [req.query.longitude, req.query.latitude],
+		// 				},
+		// 				$minDistance: 0,
+		// 				$maxDistance: req.query.maxDistance
+		// 					? req.query.maxDistance
+		// 					: config.MAX_DISTANCE_IN_METRES,
+		// 			},
+		// 		},
+		// 	}
+		// });
+		await prisma.$runCommandRaw({
+			createIndexes: "BusStop", // Collection name
+			indexes: [
+				{
+					key: { location: "2dsphere" }, // location is the field where the 2D sphere index will be created
+					name: "location_2dsphere" // The name of the index
+				}
+			]
+		});
+		
+		const longitude = parseFloat(req.query.longitude.toString());
+		const latitude = parseFloat(req.query.latitude.toString());
+		
+		if (longitude < -180 || longitude > 180 || latitude < -90 || latitude > 90) {
+		  return res.status(422).json({ msg: "Invalid coordinates" });
+		}
+		
+		// Proceed with the $geoNear query
 		const busStopsNearby = await prisma.$runCommandRaw({
-			filter: {
-				location: {
-					$near: {
-						$geometry: {
-							type: "Point",
-							coordinates: [req.query.longitude, req.query.latitude],
-						},
-						$minDistance: 0,
-						$maxDistance: req.query.maxDistance
-							? req.query.maxDistance
-							: config.MAX_DISTANCE_IN_METRES,
-					},
+		  aggregate: "BusStop",  // The collection name
+		  pipeline: [
+			{
+			  $geoNear: {
+				near: {
+				  type: "Point",
+				  coordinates: [longitude, latitude],  // Correct order [longitude, latitude]
 				},
-			}
+				distanceField: "distance",
+				maxDistance: req.query.maxDistance
+				  ? parseFloat(req.query.maxDistance.toString())
+				  : config.MAX_DISTANCE_IN_METRES,
+				spherical: true,
+			  },
+			},
+		  ],
+		  cursor: {},
 		});
 
 		// Nearest bus stop is the first one in the list

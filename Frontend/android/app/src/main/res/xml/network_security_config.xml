@@ -5,6 +5,7 @@
     <trust-anchors>
       <certificates src="system" />
     </trust-anchors>
+    <domain includeSubdomains="true">192.168.68.1</domain>
   </base-config>
 
   <!-- <domain-config cleartextTrafficPermitted="true">
