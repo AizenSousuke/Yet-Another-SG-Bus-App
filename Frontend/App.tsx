@@ -22,6 +22,8 @@ import { useSelector } from "react-redux";
 const Stack = createStackNavigator();
 
 const App = () => {
+	// State is coming from Redux store
+	// Accesses state.home.token, which means your Redux store has a home slice that contains token.
 	let authToken = useSelector((state) => state.home.token);
 	let goingOut = useSelector((state) => state.busStop.GoingOut);
 	let goingHome = useSelector((state) => state.busStop.GoingHome);

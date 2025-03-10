@@ -4,7 +4,14 @@ const { Provider, Consumer } = createContext(null);
 
 const SettingsProvider = (props) => {
 	return (
-		<Provider value={{ settings: props.value, updateSettings: props.updateSettings }}>{props.children}</Provider>
+		<Provider
+			value={{
+				settings: props.value,
+				updateSettings: props.updateSettings,
+			}}
+		>
+			{props.children}
+		</Provider>
 	);
 };
 
