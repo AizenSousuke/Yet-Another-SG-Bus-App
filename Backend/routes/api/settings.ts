@@ -92,32 +92,61 @@ router.put(
 	async (req: any, res) => {
 		try {
 			console.log("Updating settings to add busesTracked");
-			const fieldToUpdate = !req.body.GoingOut ? "goingHome" : "goingOut";
-			const userId = req.user.UserId;
+			const fieldToUpdate = !req.body.settings.GoingOut ? "goingHome" : "goingOut";
+			console.log("fieldToUpdate: " + fieldToUpdate);
+			const userId = req.user.id;
+			console.log("req.user: " + JSON.stringify(req.user));
+			console.log("req.body: " + JSON.stringify(req.body));
 			const busStopCode = req.body.code;
 			const busesTracked = req.body.busesTracked;
 
-			const existingSettings = await prisma.setting.findFirstOrThrow({
-				where: {
-					userId: userId
-				},
-				include: {
-					settingsSchema: {
-						include: {
-							goingHome: {
-								include: {
-									busStop: true
-								}
-							},
-							goingOut: {
-								include: {
-									busStop: true
-								}
-							}
+			// const existingSettings = await prisma.setting.findFirstOrThrow({
+			// 	where: {
+			// 		userId: userId
+			// 	},
+			// 	include: {
+			// 		settingsSchema: {
+			// 			include: {
+			// 				goingHome: {
+			// 					include: {
+			// 						busStop: true
+			// 					}
+			// 				},
+			// 				goingOut: {
+			// 					include: {
+			// 						busStop: true
+			// 					}
+			// 				}
+			// 			}
+			// 		}
+			// 	}
+			// });
+			
+			const existingSettings = await prisma.setting.upsert({
+				where: { userId: userId },
+				update: {}, // No update needed, just fetch related data
+				create: {
+				  userId: userId,
+				  settingsSchema: {
+					create: {
+						goingHome: {
+						  create: [] // Ensure it matches the expected type
+						},
+						goingOut: {
+						  create: [] // Ensure it matches the expected type
 						}
 					}
+				  }
+				},
+				include: {
+				  settingsSchema: {
+					include: {
+					  goingHome: { include: { busStop: true } },
+					  goingOut: { include: { busStop: true } }
+					}
+				  }
 				}
-			});
+			  });			  
 
 			const settingsSchema = existingSettings.settingsSchema;
 
