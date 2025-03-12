@@ -25,10 +25,13 @@ router.get("/", authMiddleware, async (req: any, res) => {
 		});
 
 	if (!settings) {
-		console.log("No settings");
+		console.log("No settings in database");
 		return res
-			.status(404)
-			.json({ msg: "There are no settings for this user." });
+			.status(200)
+			.json({
+				settings: null,
+				msg: "There are no settings for this user."
+			});
 	}
 
 	console.log("Successfully loaded settings: " + JSON.stringify(settings));

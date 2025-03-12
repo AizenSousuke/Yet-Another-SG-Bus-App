@@ -100,7 +100,7 @@ export const GetSettings = async (token: string | null) => {
 	return await axios
 		.get(`${api}/settings`, data)
 		.then((res) => {
-			console.log(JSON.stringify(res));
+			console.log("Settings res: " + JSON.stringify(res));
 			return res.data;
 		})
 		.catch((error) => {
@@ -166,9 +166,9 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 			data.body = {
 				settings: newSettings,
 			};
-			console.log("New data: " + JSON.stringify(data));
+			console.log("New data in method SaveSettings: " + JSON.stringify(data));
 			return await axios
-				.put(`${api}/settings`, data.body, data)
+				.put(`${api}/settings/update`, data.body, data)
 				.then((res) => {
 					return res.data;
 				})
