@@ -17,8 +17,16 @@ router.get("/", authMiddleware, async (req: any, res) => {
 			include: {
 				settingsSchema: {
 					include: {
-						goingHome: true,
-						goingOut: true
+						goingHome: {
+							include: {
+								busStop: true
+							}
+						},
+						goingOut: {
+							include: {
+								busStop: true
+							}
+						}
 					}
 				}
 			}
@@ -135,7 +143,7 @@ router.put(
 								create: req.body.settings.GoingOut.map(busStopCode => ({
 									busStop: {
 										connect: {
-											busStopCode
+											busStopCode: busStopCode
 										}
 									},
 								}))

@@ -149,14 +149,12 @@ const App = () => {
 					console.log(
 						"Settings res in _getData: " + JSON.stringify(res)
 					);
-					// Save settings here
-					if (res.settings?.Settings) {
-						console.log("Saving settings");
-						// setSettings(res.settings?.Settings);
+					var settings = res.settings?.settingsSchema;
+					if (settings) {
 						const goingHome: Array<string> =
-							res.settings?.Settings?.GoingHome;
+						settings.goingHome;
 						const goingOut: Array<string> =
-							res.settings?.Settings?.GoingOut;
+						settings.goingOut;
 						console.log(
 							"Going home: ",
 							goingHome,
