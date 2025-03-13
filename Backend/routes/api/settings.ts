@@ -81,24 +81,27 @@ router.get("/", authMiddleware, async (req: any, res) => {
 // 	}
 // );
 
+/**
+ * Save everything instead of just a code
+ */
 router.put(
 	"/update",
 	[
-		check("code", "Code is required").notEmpty(),
-		check("GoingOut", "GoingOut boolean property is required").notEmpty(),
-		check("busesTracked", "busesTracked boolean property is required").notEmpty(),
+		// check("code", "Code is required").notEmpty(),
+		// check("GoingOut", "GoingOut boolean property is required").notEmpty(),
+		// check("busesTracked", "busesTracked boolean property is required").notEmpty(),
 	],
 	authMiddleware,
 	async (req: any, res) => {
 		try {
-			console.log("Updating settings to add busesTracked");
-			const fieldToUpdate = !req.body.settings.GoingOut ? "goingHome" : "goingOut";
-			console.log("fieldToUpdate: " + fieldToUpdate);
+			console.log("Updating settings");
+			// const fieldToUpdate = !req.body.settings.GoingOut ? "goingHome" : "goingOut";
+			// console.log("fieldToUpdate: " + fieldToUpdate);
 			const userId = req.user.id;
 			console.log("req.user: " + JSON.stringify(req.user));
 			console.log("req.body: " + JSON.stringify(req.body));
-			const busStopCode = req.body.code;
-			const busesTracked = req.body.busesTracked;
+			// const busStopCode = req.body.code;
+			// const busesTracked = req.body.busesTracked;
 
 			// const existingSettings = await prisma.setting.findFirstOrThrow({
 			// 	where: {
@@ -124,7 +127,22 @@ router.put(
 			
 			const existingSettings = await prisma.setting.upsert({
 				where: { userId: userId },
-				update: {}, // No update needed, just fetch related data
+				update: {
+					settingsSchema: {
+						update: {
+							goingOut: {
+								set: [], // Remove all entries before updating
+								create: req.body.settings.GoingOut.map(busStopCode => ({
+									busStop: {
+										connect: {
+											busStopCode
+										}
+									},
+								}))
+							}
+						}
+					}
+				},
 				create: {
 				  userId: userId,
 				  settingsSchema: {
@@ -148,99 +166,7 @@ router.put(
 				}
 			  });			  
 
-			const settingsSchema = existingSettings.settingsSchema;
-
 			console.log("existingSettings:", existingSettings);
-
-			const busStop = await prisma.busStop.findUniqueOrThrow({
-				where: {
-					busStopCode: busStopCode
-				}
-			});
-
-			await prisma.setting.upsert({
-				where: {
-					userId: userId
-				},
-				create: {
-					userId: userId,
-					settingsSchema: {
-						create: {
-							goingHome: {
-								create: []
-							},
-							goingOut: {
-								create: []
-							},
-						}
-					}
-				},
-				update: {
-					settingsSchema: {
-						[fieldToUpdate]: {
-							update: {
-								where: {
-									busStop: {
-										busStopCode: busStopCode
-									}
-								},
-								data: {
-
-								}
-							}
-						}
-					}
-				}
-			});
-
-			// const existingBusStop = existingSettings.settingsSchema.Settings[fieldToUpdate].some(
-			// 	(stop) => stop.BusStopCode === busStopCode
-			// );
-
-			const existingBusStop = true;
-
-			let oldBusStopTrackedBuses;
-			console.log("Existing bus stop: ", existingBusStop);
-
-			if (existingBusStop) {
-				console.log("Updating");
-				// Update the existing BusStopCode's BusesTracked array
-				oldBusStopTrackedBuses = await prisma.setting.update(
-					{
-						where: {
-							userId: req.userId
-						},
-						data: {
-							settingsSchema: {
-								update: {
-
-									updatedAt: new Date(Date.now())
-								}
-							}
-						}
-					});
-			} else {
-				console.log("Adding");
-				// Add a new BusStopCode object to the array
-				oldBusStopTrackedBuses = await prisma.setting.update(
-					{
-						where: {
-							userId: userId
-						},
-						data: {
-							settingsSchema: {
-								update: {
-									[fieldToUpdate]: {
-										push: busStop
-									},
-									updatedAt: new Date(Date.now())
-								}
-							}
-						}
-					});
-			}
-
-			console.log("oldBusStopTrackedBuses", oldBusStopTrackedBuses);
 
 			return res.status(200).json({ msg: "Successfully updated settings." });
 		} catch (error) {
