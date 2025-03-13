@@ -165,7 +165,7 @@ const App = () => {
 							store.dispatch(
 								addBusStopBus({
 									direction: Direction.GoingOut,
-									busStopCode: busStop,
+									busStopCode: busStop.busStop.busStopCode,
 								})
 							);
 						});
@@ -173,7 +173,7 @@ const App = () => {
 							store.dispatch(
 								addBusStopBus({
 									direction: Direction.GoingHome,
-									busStopCode: busStop,
+									busStopCode: busStop.busStop.busStopCode,
 								})
 							);
 						});

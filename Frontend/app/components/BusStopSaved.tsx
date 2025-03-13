@@ -31,7 +31,7 @@ const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; Goin
 	const getBusStopData = async () => {
 		GetBusStopByCode(code)
 			.then((res) => {
-				// console.log("GetBusStopByCode: " + JSON.stringify(res.busStop));
+				console.warn("GetBusStopByCode: " + JSON.stringify(res.busStop));
 				setBusStop(res.busStop);
 			})
 			.catch((error) => console.error(error));
@@ -63,13 +63,13 @@ const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; Goin
 					<ListItem.Title>
 						<Text style={AppStyles.busStopName}>
 							{busStop
-								? busStop.Description
+								? busStop.description
 								: "No Bus Stop Name provided"}
 						</Text>
 					</ListItem.Title>
 					<ListItem.Subtitle>
 						<Text style={AppStyles.busStopRoadName}>
-							{busStop ? busStop.RoadName : "No Address provided"}{" "}
+							{busStop ? busStop.roadName : "No Address provided"}{" "}
 							({code ?? "No Bus Stop Code provided"})
 						</Text>
 					</ListItem.Subtitle>

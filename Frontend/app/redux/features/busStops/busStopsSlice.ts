@@ -22,7 +22,9 @@ export const BusStopsSlice = createSlice({
     initialState: initialState,
     reducers: {
         addBusStopBus: (state, action) => {
+            console.log("action payload: " + JSON.stringify(action.payload));
             const { direction, busStopCode, busNumber }: { direction: Direction, busStopCode: number, busNumber?: number } = action.payload;
+            console.log("bus stop code: " + JSON.stringify(busStopCode));
 
             const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
 
