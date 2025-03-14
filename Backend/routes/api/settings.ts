@@ -132,7 +132,7 @@ router.put(
 			// 		}
 			// 	}
 			// });
-			
+
 			const existingSettings = await prisma.setting.upsert({
 				where: { userId: userId },
 				update: {
@@ -152,27 +152,27 @@ router.put(
 					}
 				},
 				create: {
-				  userId: userId,
-				  settingsSchema: {
-					create: {
-						goingHome: {
-						  create: [] // Ensure it matches the expected type
-						},
-						goingOut: {
-						  create: [] // Ensure it matches the expected type
+					userId: userId,
+					settingsSchema: {
+						create: {
+							goingHome: {
+								create: [] // Ensure it matches the expected type
+							},
+							goingOut: {
+								create: [] // Ensure it matches the expected type
+							}
 						}
 					}
-				  }
 				},
 				include: {
-				  settingsSchema: {
-					include: {
-					  goingHome: { include: { busStop: true } },
-					  goingOut: { include: { busStop: true } }
+					settingsSchema: {
+						include: {
+							goingHome: { include: { busStop: true } },
+							goingOut: { include: { busStop: true } }
+						}
 					}
-				  }
 				}
-			  });			  
+			});
 
 			console.log("existingSettings:", existingSettings);
 
@@ -183,6 +183,46 @@ router.put(
 		}
 	}
 )
+
+router.put("/remove",
+	authMiddleware,
+	async (req: any, res) => {
+		try {
+			const userId = req.user.id;
+			const { code, GoingOut } = req.body;
+			
+			// Find the bus stop matching the code
+			const busStop = await prisma.busStop.findUnique({
+				where: { busStopCode: code },
+				select: { id: true }, // Get only the ObjectId
+			});
+	
+			if (!busStop) {
+				return res.status(404).json({ error: "Bus stop not found" });
+			}
+
+			const updatedSettings = await prisma.setting.update({
+				where: { userId },
+				data: {
+					settingsSchema: {
+						update: {
+							[GoingOut ? "goingOut" : "goingHome"]: {
+								deleteMany: {
+									busStopId: busStop.id
+								},
+							},
+						},
+					},
+				},
+				include: { settingsSchema: true },
+			});
+
+			return res.status(200).json({ msg: "Successfully removed code from settings", settings: updatedSettings });
+		} catch (error) {
+			console.error("Error updating settings:", error);
+			return res.status(500).json({ error: "Failed to update settings" });
+		}
+	})
 
 // router.delete(
 // 	"/delete",
