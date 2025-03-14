@@ -286,6 +286,10 @@ const App = () => {
 									backgroundColor: "transparent",
 								},
 							}}
+							listeners={{
+								beforeRemove: async () =>
+									await _getData(authToken),
+							}}
 						/>
 					</Stack.Navigator>
 				</NavigationContainer>
