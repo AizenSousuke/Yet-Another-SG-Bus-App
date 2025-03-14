@@ -31,7 +31,14 @@
 		},
 		"description": "Yet Another SG Bus App for Singapore Buses",
 		"scheme": "yasgba",
-		"plugins": ["@config-plugins/detox"],
+		"plugins": [
+			[
+				"@config-plugins/detox",
+				{
+				"subdomains": "*"
+				}
+			]
+		],
 		"extra": {
 			"eas": {
 				"projectId": "cb64d949-0638-4eb3-8c12-dbb8ab93abee"
