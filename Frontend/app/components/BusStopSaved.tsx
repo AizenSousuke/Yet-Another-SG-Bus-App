@@ -31,7 +31,7 @@ const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; Goin
 	const getBusStopData = async () => {
 		GetBusStopByCode(code)
 			.then((res) => {
-				console.warn("GetBusStopByCode: " + JSON.stringify(res.busStop));
+				// console.log("GetBusStopByCode: " + JSON.stringify(res.busStop));
 				setBusStop(res.busStop);
 			})
 			.catch((error) => console.error(error));

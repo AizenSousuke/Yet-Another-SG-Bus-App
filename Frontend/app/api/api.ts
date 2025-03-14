@@ -104,7 +104,7 @@ export const GetSettings = async (token: string | null) => {
 			return res.data;
 		})
 		.catch((error) => {
-			console.error("Error in API: " + error);
+			console.error("Error in API for GetSettings: " + error);
 			return { msg: error.message };
 		});
 };
@@ -131,24 +131,26 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 						JSON.stringify(settings)
 					);
 
-					console.log("settings.Settings.GoingOut:" + settings.Settings.GoingOut);
-					console.log("settings.Settings.GoingHome:" + settings.Settings.GoingHome);
-					if (settings.Settings.GoingOut == null) {
-						settings.Settings.GoingOut = [];
+					console.log("settings.settingsSchema.goingOut:" + JSON.stringify(settings.settingsSchema.goingOut));
+					console.log("settings.settingsSchema.goingHome:" + JSON.stringify(settings.settingsSchema.goingHome));
+					if (settings.settingsSchema.goingOut == null) {
+						settings.settingsSchema.goingOut = [];
 					}
 
-					if (settings.Settings.GoingHome == null) {
-						settings.Settings.GoingHome = [];
+					if (settings.settingsSchema.goingHome == null) {
+						settings.settingsSchema.goingHome = [];
 					}
 
-					return response.data.settings.Settings;
+					console.log("Returning from settings in DB: " + JSON.stringify(settings.settingsSchema));
+
+					return { GoingOut: settings.settingsSchema.goingOut.map(src => src.busStop.busStopCode), GoingHome: settings.settingsSchema.goingHome.map(src => src.busStop.busStopCode) };
 				} else {
 					console.log("No settings. Creating new ones.");
 					return { GoingOut: [], GoingHome: [] };
 				}
 			})
 			.catch((error) => {
-				console.warn("Error in API. Defaulting value: " + error);
+				console.error("Error in API for SaveSettings when getting settings. Defaulting value: " + error);
 				return { GoingOut: [], GoingHome: [] };
 			});
 
@@ -166,9 +168,11 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 			data.body = {
 				settings: newSettings,
 			};
+
 			console.log("New data in method SaveSettings: " + JSON.stringify(data));
+
 			return await axios
-				.put(`${api}/settings/update`, data.body, data)
+				.put(`${api}/settings/update/all`, data.body, data)
 				.then((res) => {
 					return res.data;
 				})
@@ -184,9 +188,11 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 			data.body = {
 				settings: newSettings,
 			};
+
 			console.log("New data: " + JSON.stringify(data));
+
 			return await axios
-				.put(`${api}/settings`, data.body, data)
+				.put(`${api}/settings/update/all`, data.body, data)
 				.then((res) => {
 					return res.data;
 				})
