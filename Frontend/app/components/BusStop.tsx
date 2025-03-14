@@ -4,6 +4,9 @@ import BusDetails from "./BusDetails";
 import AppStyles from "../../assets/css/AppStyles";
 import { GetBusStopByCode } from "../api/api";
 
+/**
+ * Bus Stop and Bus Services view
+ */
 const BusStop = ({ busStopData }: { busStopData: any }) => {
 	const [busStopLocation, setBusStopLocation] = useState({ Location: [] });
 

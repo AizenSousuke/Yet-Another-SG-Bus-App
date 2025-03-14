@@ -45,6 +45,9 @@ const GetEstimatedArrivalMinute = (estimatedArrivalTime: string) => {
 	}
 };
 
+/**
+ * Bus detail component (for arrival time)
+ */
 const BusDetails = ({
 	busStopData,
 	busNumber,

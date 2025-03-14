@@ -4,6 +4,9 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ColourScheme from "../settings/colourScheme.json";
 
+/**
+ * Map view of the bus
+ */
 const BusLocation = ({
 	busNumber,
 	nextBus,

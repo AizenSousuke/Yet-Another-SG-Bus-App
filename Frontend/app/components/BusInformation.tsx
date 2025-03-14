@@ -15,6 +15,9 @@ import ColourScheme from "../settings/colourScheme.json";
 import { GetBusData, GetBusRouteData } from "../api/api";
 import Table from "./Table";
 
+/**
+ * Information and Route
+ */
 const BusInformation = ({
 	busNumber,
 	busStopCode,
