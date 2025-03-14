@@ -219,61 +219,12 @@ export const RemoveCodeFromSettings = async (token: string | null, code: string,
 			.put(`${api}/settings/remove`, { code, GoingOut }, data)
 			.then((res) => res.data)
 			.catch((error) => console.error("Error in API: " + error));
-
-		// Whole settings way
-		// // Fetch previous settings
-		// const prevSettings = await axios
-		// 	.get(`${api}/settings`, data)
-		// 	.then((response) => {
-		// 		const settings = response.data?.settings;
-		// 		if (settings) {
-		// 			console.log("Settings found: " + JSON.stringify(settings));
-
-		// 			if (!settings.Settings.GoingOut) {
-		// 				settings.Settings.GoingOut = [];
-		// 			}
-		// 			if (!settings.Settings.GoingHome) {
-		// 				settings.Settings.GoingHome = [];
-		// 			}
-
-		// 			return settings.Settings;
-		// 		} else {
-		// 			console.log("No settings found.");
-		// 			return { GoingOut: [], GoingHome: [] };
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.warn("Error in API. Defaulting value: " + error);
-		// 		return { GoingOut: [], GoingHome: [] };
-		// 	});
-
-		// console.log("prevSettings: " + JSON.stringify(prevSettings));
-		// console.log("Token is still: " + data.headers["X-Auth-Token"]);
-
-		// // Modify settings by removing the code
-		// const newSettings = Object.assign({}, prevSettings, {
-		// 	[GoingOut ? "GoingOut" : "GoingHome"]: prevSettings[GoingOut ? "GoingOut" : "GoingHome"].filter(
-		// 		(c: string) => c !== code
-		// 	),
-		// });
-
-		// data.body = { settings: newSettings };
-		// console.log("New data in method RemoveCodeFromSettings: " + JSON.stringify(data));
-
-		// // Send updated settings
-		// return await axios
-		// 	.put(`${api}/settings/update`, data.body, data)
-		// 	.then((res) => res.data)
-		// 	.catch((error) => console.error("Error in API: " + error));
 	} catch (error) {
 		console.error(error);
 	}
 };
 
 export const SignIn = async () => {
-	// const result = await axios.get(`${api}/auth/facebook`, data);
-	// return result.data;
-
 	console.log("Signing in with facebook");
 	const fblogin =
 		await WebBrowser.openBrowserAsync(

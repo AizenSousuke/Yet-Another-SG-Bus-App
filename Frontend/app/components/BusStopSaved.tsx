@@ -16,6 +16,9 @@ import { store } from "../redux/store";
 import { removeBusStopBus } from "../redux/features/busStops/busStopsSlice";
 import { Direction } from "../classes/Enums";
 
+/**
+ * Component that is used for Home\Going out page
+ */
 const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; GoingOut: boolean, settingsUpdaterFunc: Function }) => {
 	const [busStop, setBusStop] = useState(null);
 	const [busStopData, setBusStopData] = useState(null);

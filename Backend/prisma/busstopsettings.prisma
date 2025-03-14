@@ -5,6 +5,7 @@ model BusStopSetting {
     busStopId String  @db.ObjectId
 
     busServicesIDs String[]     @db.ObjectId
+    // Services saved for the bus stop. If empty, show all bus services.
     busServices     BusService[] @relation(fields: [busServicesIDs], references: [id])
 
     settingSchemaGoingOut    SettingSchema? @relation("SettingsGoingOut", fields: [settingSchemaGoingOutId], references: [id])
