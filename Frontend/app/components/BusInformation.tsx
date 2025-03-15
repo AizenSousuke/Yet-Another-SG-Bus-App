@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppStyles from "../../assets/css/AppStyles";
 import ColourScheme from "../settings/colourScheme.json";
-import { GetBusData, GetBusRouteData } from "../api/api";
+import { GetBusRouteDataWithBusStopCode, GetBusRouteData } from "../api/api";
 import Table from "./Table";
 
 /**
@@ -44,6 +44,7 @@ const BusInformation = ({
 				// Bus Routes
 				console.log("Getting bus route data for bus number", busNumber);
 				data = await GetBusRouteData(busNumber);
+				// console.log("Route data: " + JSON.stringify(data));
 				if (data) {
 					setRoute(data.routes);
 				}
@@ -57,8 +58,8 @@ const BusInformation = ({
 					"and bus stop code",
 					busStopCode
 				);
-				data = await GetBusData(busNumber, busStopCode);
-				console.log("Bus data: " + JSON.stringify(data));
+				data = await GetBusRouteDataWithBusStopCode(busNumber, busStopCode);
+				// console.log("Bus data: " + JSON.stringify(data));
 				if (data) {
 					setInformation(data.routes);
 				}
@@ -118,13 +119,13 @@ const BusInformation = ({
 														fontSize: 12,
 													}}
 												>
-													{(r.BusStopData != null
-														? r.BusStopData[0]
-																.Description
+													{(r.busStop.description != null ? r.busStop.description
 														: "No description") +
 														" (" +
-														r.BusStopCode +
+														r.busStopCode +
 														")"}
+
+														{/* {JSON.stringify(r)} */}
 												</ListItem.Title>
 											</ListItem.Content>
 										}

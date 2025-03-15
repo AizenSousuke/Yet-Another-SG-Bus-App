@@ -8,5 +8,6 @@ model BusStop {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 
-    BusStopSetting BusStopSetting[]
+    busStopSetting BusStopSetting[]
+    busRoutes      BusRoute[]
 }

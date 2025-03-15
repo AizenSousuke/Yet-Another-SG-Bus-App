@@ -26,7 +26,7 @@ var data = {
 	} as Headers,
 };
 
-export const GetBusData = async (busNumber: string, busStopCode: string) => {
+export const GetBusRouteDataWithBusStopCode = async (busNumber: string, busStopCode: string) => {
 	const response = await axios.get(
 		`${api}/busroutes/${busNumber}/${busStopCode}`
 	);
@@ -258,7 +258,7 @@ export const CheckTokenExpiry = async (token: string | null) => {
 };
 
 export default {
-	GetBusData,
+	GetBusRouteDataWithBusStopCode,
 	GetBusRouteData,
 	GetBusStopList,
 	GetBusStop,

@@ -12,4 +12,6 @@ model BusRoute {
     sat_lastBus  String
     sun_firstBus String
     sun_lastBus  String
+
+    busStop BusStop @relation(fields: [busStopCode], references: [busStopCode])
 }

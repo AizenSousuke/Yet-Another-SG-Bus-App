@@ -22,10 +22,12 @@ router.get("/:serviceNo/:busStopCode", async (req: any, res) => {
 				.json({ msg: "No serviceNo nor busStopCode param provided" });
 		}
 
+		console.log("Bus Stop Code: " + req.params.busStopCode);
+
 		const routes = await prisma.busRoute.findMany({
 			where: {
-
 				serviceNo: req.params.serviceNo,
+				busStopCode: req.params.busStopCode
 			},
 			orderBy: {
 				distance: "asc"
@@ -38,29 +40,32 @@ router.get("/:serviceNo/:busStopCode", async (req: any, res) => {
 				.json({ msg: "No routes or information provided" });
 		}
 
-		// Note: May return 2
 		return res.status(200).json({
-			routes: routes.filter(
-				(service) => service.busStopCode === req.params.busStopCode
-			),
-		});
+			routes: routes
+		})
 	} catch (error) {
 		CatchError(error, res);
 	}
 });
 
+/**
+ * Get all the routes
+ */
 router.get("/:serviceNo", async (req: any, res) => {
 	try {
 		if (!req.params.serviceNo) {
 			return res.status(422).json({ msg: "No serviceNo param provided" });
 		}
 
-		const routes = await prisma.busRoute.aggregate({
+		const routes = await prisma.busRoute.findMany({
 			where: {
 				serviceNo: req.params.serviceNo
 			},
 			orderBy: {
 				distance: "asc"
+			},
+			include: {
+				busStop: { select: { description: true } }
 			}
 		});
 
