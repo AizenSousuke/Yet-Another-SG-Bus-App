@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View } from "react-native";
+import { FlatList, ScrollView, View } from "react-native";
 import {
 	Button,
 	ButtonGroup,
@@ -87,77 +87,50 @@ const BusInformation = ({
 					updatePageData(index);
 				}}
 			/>
-			<ScrollView style={{ flexGrow: 0, height: 300 }}>
-				{selectedIndex === 0 && (
-					<Card containerStyle={{flexShrink: 1}}>
+			<Card containerStyle={{ flexShrink: 1, marginBottom: 10 }}>
+				<FlatList 
+					data={selectedIndex === 1 ? route : []}
+					keyExtractor={(item, index) => index.toString()}
+					ListHeaderComponent={
+					selectedIndex === 0 ? (
+						<>
 						<Card.Title>Information</Card.Title>
 						<Card.Divider width={1} />
-						{/* <Text>{JSON.stringify(information)}</Text> */}
 						<Table information={information} />
-					</Card>
-				)}
-				{selectedIndex === 1 && (
-					<Card containerStyle={{flexShrink: 1}}>
+						</>
+					) : (
+						<>
 						<Card.Title testID="RoutePage">Route</Card.Title>
 						<Card.Divider width={1} />
-						{route.map((r, index) => {
-							return (
-								<View key={index}>
-									<ListItem.Accordion
-										content={
-											<ListItem.Content
-												style={{
-													backgroundColor:
-														"firebrick",
-													padding: 10,
-													borderRadius: 5,
-												}}
-											>
-												<ListItem.Title
-													style={{
-														color: "white",
-														fontSize: 12,
-													}}
-												>
-													{(r.busStop != null ? r.busStop.description
-														: "No description") +
-														" (" +
-														r.busStopCode +
-														")"}
-
-														{/* {JSON.stringify(r)} */}
-												</ListItem.Title>
-											</ListItem.Content>
-										}
-										isExpanded={expanded == index}
-										noIcon
-										onPress={() => {
-											setExpanded(
-												expanded == index ? null : index
-											);
-										}}
-									>
-										<ListItem>
-											<ListItem.Content>
-												<Text>Expanded</Text>
-											</ListItem.Content>
-										</ListItem>
-									</ListItem.Accordion>
-
-									{index != route.length - 1 ? (
-										<Icon
-											name="caret-down"
-											type="font-awesome"
-										/>
-									) : (
-										<></>
-									)}
-								</View>
-							);
-						})}
-					</Card>
-				)}
-			</ScrollView>
+						</>
+					)
+					}
+					renderItem={({ item, index }) => (
+						<>
+							<ListItem.Accordion
+								key={index}
+								content={
+								<ListItem.Content style={{ backgroundColor: "firebrick", padding: 10, borderRadius: 5 }}>
+									<ListItem.Title style={{ color: "white", fontSize: 12 }}>
+									{(item.busStop ? item.busStop.description : "No description") + " (" + item.busStopCode + ")"}
+									</ListItem.Title>
+								</ListItem.Content>
+								}
+								isExpanded={expanded === index}
+								// noIcon
+								onPress={() => setExpanded(expanded === index ? null : index)}
+							>
+								<ListItem containerStyle={{ marginVertical: 0, paddingVertical: 0 }}>
+									<ListItem.Content>
+										{/* Creating empty spaces */}
+										{/* <Text>{item.busStop.description}</Text> */}
+									</ListItem.Content>
+								</ListItem>
+							</ListItem.Accordion>
+						</>
+					)}
+				/>
+			</Card>
 		</SafeAreaView>
 	);
 };
