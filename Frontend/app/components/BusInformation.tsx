@@ -58,6 +58,7 @@ const BusInformation = ({
 					busStopCode
 				);
 				data = await GetBusData(busNumber, busStopCode);
+				console.log("Bus data: " + JSON.stringify(data));
 				if (data) {
 					setInformation(data.routes);
 				}
@@ -78,10 +79,10 @@ const BusInformation = ({
 			<ButtonGroup
 				containerStyle={{ marginBottom: 0 }}
 				selectedButtonStyle={AppStyles.buttonGroupStyle}
-				// buttons={["Information", "Route"]}
-				buttons={[<Button title={"Information"} />, <Button title={"Route"} testID={"RouteButton"} />]}
 				selectedIndex={selectedIndex}
+				buttons={[<Button title={"Information"} testID={"InformationButton"} />, <Button title={"Route"} testID={"RouteButton"} />]}
 				onPress={(index) => {
+					console.log("Button group pressed: " + index);
 					updatePageData(index);
 				}}
 			/>
@@ -90,6 +91,7 @@ const BusInformation = ({
 					<Card>
 						<Card.Title>Information</Card.Title>
 						<Card.Divider width={1} />
+						{/* <Text>{JSON.stringify(information)}</Text> */}
 						<Table information={information} />
 					</Card>
 				)}

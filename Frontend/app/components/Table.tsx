@@ -40,7 +40,7 @@ const Table = ({ information }: { information: any }) => {
 								</View>
 								<View style={AppStyles.tableRowColumnStyle}>
 									<Text style={AppStyles.tableTextStyle}>
-										{info.WD_FirstBus} hrs
+										{info.wd_firstBus} hrs
 									</Text>
 								</View>
 							</View>
@@ -52,7 +52,7 @@ const Table = ({ information }: { information: any }) => {
 								</View>
 								<View style={AppStyles.tableRowColumnStyle}>
 									<Text style={AppStyles.tableTextStyle}>
-										{info.WD_LastBus} hrs
+										{info.wd_lastBus} hrs
 									</Text>
 								</View>
 							</View>
@@ -66,7 +66,7 @@ const Table = ({ information }: { information: any }) => {
 								</View>
 								<View style={AppStyles.tableRowColumnStyle}>
 									<Text style={AppStyles.tableTextStyle}>
-										{info.SAT_FirstBus} hrs
+										{info.sat_firstBus} hrs
 									</Text>
 								</View>
 							</View>
@@ -78,7 +78,7 @@ const Table = ({ information }: { information: any }) => {
 								</View>
 								<View style={AppStyles.tableRowColumnStyle}>
 									<Text style={AppStyles.tableTextStyle}>
-										{info.SAT_LastBus} hrs
+										{info.sat_lastBus} hrs
 									</Text>
 								</View>
 							</View>
@@ -92,7 +92,7 @@ const Table = ({ information }: { information: any }) => {
 								</View>
 								<View style={AppStyles.tableRowColumnStyle}>
 									<Text style={AppStyles.tableTextStyle}>
-										{info.SUN_FirstBus} hrs
+										{info.sun_firstBus} hrs
 									</Text>
 								</View>
 							</View>
@@ -104,7 +104,7 @@ const Table = ({ information }: { information: any }) => {
 								</View>
 								<View style={AppStyles.tableRowColumnStyle}>
 									<Text style={AppStyles.tableTextStyle}>
-										{info.SUN_LastBus} hrs
+										{info.sun_lastBus} hrs
 									</Text>
 								</View>
 							</View>
