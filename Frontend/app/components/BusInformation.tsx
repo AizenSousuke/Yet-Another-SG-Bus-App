@@ -87,9 +87,9 @@ const BusInformation = ({
 					updatePageData(index);
 				}}
 			/>
-			<ScrollView style={{ flexGrow: 0 }}>
+			<ScrollView style={{ flexGrow: 0, height: 300 }}>
 				{selectedIndex === 0 && (
-					<Card>
+					<Card containerStyle={{flexShrink: 1}}>
 						<Card.Title>Information</Card.Title>
 						<Card.Divider width={1} />
 						{/* <Text>{JSON.stringify(information)}</Text> */}
@@ -97,7 +97,7 @@ const BusInformation = ({
 					</Card>
 				)}
 				{selectedIndex === 1 && (
-					<Card>
+					<Card containerStyle={{flexShrink: 1}}>
 						<Card.Title testID="RoutePage">Route</Card.Title>
 						<Card.Divider width={1} />
 						{route.map((r, index) => {
@@ -119,7 +119,7 @@ const BusInformation = ({
 														fontSize: 12,
 													}}
 												>
-													{(r.busStop.description != null ? r.busStop.description
+													{(r.busStop != null ? r.busStop.description
 														: "No description") +
 														" (" +
 														r.busStopCode +
