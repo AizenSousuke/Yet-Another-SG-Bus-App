@@ -81,7 +81,8 @@ const BusInformation = ({
 				containerStyle={{ marginBottom: 0 }}
 				selectedButtonStyle={AppStyles.buttonGroupStyle}
 				selectedIndex={selectedIndex}
-				buttons={[<Button title={"Information"} testID={"InformationButton"} />, <Button title={"Route"} testID={"RouteButton"} />]}
+				buttonStyle={AppStyles.buttonGroupButton}
+				buttons={["Information", "Route"]}
 				onPress={(index) => {
 					console.log("Button group pressed: " + index);
 					updatePageData(index);

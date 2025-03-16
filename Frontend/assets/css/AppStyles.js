@@ -36,6 +36,13 @@ export default StyleSheet.create({
 		alignItems: "center",
 		borderRadius: 50,
 	},
+	buttonGroupButton: {
+		width: "100%",
+		height: 70,
+		backgroundColor: "#e6af54",
+		alignItems: "center",
+		borderRadius: 20,
+	},
 	text: {
 		fontSize: 36,
 		fontWeight: "100",
