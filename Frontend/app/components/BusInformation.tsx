@@ -78,7 +78,8 @@ const BusInformation = ({
 				backgroundColor={ColourScheme.header}
 			/>
 			<ButtonGroup
-				containerStyle={{ marginBottom: 0 }}
+				containerStyle={{ borderWidth: 0 }}
+				innerBorderStyle={{ width: 0 }}
 				selectedButtonStyle={AppStyles.buttonGroupStyle}
 				selectedIndex={selectedIndex}
 				buttonStyle={AppStyles.buttonGroupButton}
