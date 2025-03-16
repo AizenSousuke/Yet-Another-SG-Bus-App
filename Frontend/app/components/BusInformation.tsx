@@ -108,7 +108,6 @@ const BusInformation = ({
 					)
 					}
 					renderItem={({ item, index }) => (
-						<>
 							<ListItem.Accordion
 								key={index}
 								content={
@@ -125,11 +124,10 @@ const BusInformation = ({
 								<ListItem containerStyle={{ marginVertical: 0, paddingVertical: 0 }}>
 									<ListItem.Content>
 										{/* Creating empty spaces */}
-										{/* <Text>{item.busStop.description}</Text> */}
+										{expanded === index ? <Text>{item.busStop?.description}</Text> : null}
 									</ListItem.Content>
 								</ListItem>
 							</ListItem.Accordion>
-						</>
 					)}
 				/>
 			</Card>
