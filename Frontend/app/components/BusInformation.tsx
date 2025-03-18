@@ -68,7 +68,12 @@ const BusInformation = ({
 	};
 
 	return (
-		<SafeAreaView>
+		<SafeAreaView style={{
+			flexGrow: 1,
+			display: "flex",
+			width: "80%",
+			maxHeight: "90%",
+			}}>
 			<Header
 				centerComponent={
 					<Text style={AppStyles.busRouteNumber}>
@@ -89,8 +94,11 @@ const BusInformation = ({
 					updatePageData(index);
 				}}
 			/>
-			<Card containerStyle={{ flexShrink: 1, marginBottom: 10 }}>
+			<Card containerStyle={{flexGrow: 1, maxHeight: "90%"}}>
 				<FlatList 
+					contentContainerStyle={{
+						paddingBottom: 0,
+					}}
 					data={selectedIndex === 1 ? route : []}
 					keyExtractor={(item, index) => index.toString()}
 					ListHeaderComponent={
