@@ -1,15 +1,8 @@
 import axios from "axios";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
+import IHeaders from "../interfaces/IHeaders";
 const api = process.env.BACKEND_API ?? Constants.expoConfig?.extra?.BACKEND_API;
-
-interface Headers {
-	Accept: string;
-	"Content-Type": string;
-	"X-Auth-Token": string | null;
-	"Access-Control-Allow-Origin": string;
-	"Access-Control-Allow-Headers": string;
-}
 
 /**
  * Data to be set for the requests
@@ -23,7 +16,7 @@ var data = {
 		"X-Auth-Token": null as string | null,
 		"Access-Control-Allow-Origin": "*",
 		"Access-Control-Allow-Headers": "*",
-	} as Headers,
+	} as IHeaders,
 };
 
 export const GetBusRouteDataWithBusStopCode = async (busNumber: string, busStopCode: string) => {
