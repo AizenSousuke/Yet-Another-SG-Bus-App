@@ -126,18 +126,20 @@ router.put(
 	}
 )
 
+/**
+ * Update settings based on code and Going out prop
+ */
 router.put("/update",
 	authMiddleware,
 	async (req: any, res) => {
 		try {
 			const userId = req.user.id;
-			console.warn()
 			const { code, GoingOut } = req.body;
 
 			// Find the bus stop matching the code
 			const busStop = await prisma.busStop.findUnique({
 				where: { busStopCode: code },
-				select: { id: true }, // Get only the ObjectId
+				select: { busStopCode: true }, // Get only the busStopCode
 			});
 
 			if (!busStop) {
@@ -153,7 +155,7 @@ router.put("/update",
 								create: {
 									busStop: {
 										connect: {
-											busStopCode: busStop.id
+											busStopCode: busStop.busStopCode
 										}
 									},
 								}
@@ -164,7 +166,7 @@ router.put("/update",
 				include: { settingsSchema: true },
 			});
 
-			return res.status(200).json({ msg: "Successfully removed code from settings", settings: updatedSettings });
+			return res.status(200).json({ msg: "Successfully updated code to settings", settings: updatedSettings });
 		} catch (error) {
 			console.error("Error updating settings:", error);
 			return res.status(500).json({ error: "Failed to update settings" });

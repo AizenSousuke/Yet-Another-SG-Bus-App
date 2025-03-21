@@ -196,6 +196,27 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 	}
 };
 
+export const AddCodeToSettings = async (token: string | null, code: string, GoingOut = true) => {
+	try {
+		if (!token) {
+			console.error("No token provided");
+			return null;
+		}
+
+		console.log("Token in AddCodeToSettings is: " + token);
+		data.headers["X-Auth-Token"] = token;
+		console.log("Data: " + JSON.stringify(data));
+
+		// Just by code way
+		return await axios
+			.put(`${api}/settings/update`, { code, GoingOut }, data)
+			.then((res) => res.data)
+			.catch((error) => console.error("Error in API: " + error));
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 export const RemoveCodeFromSettings = async (token: string | null, code: string, GoingOut = true) => {
 	try {
 		if (!token) {

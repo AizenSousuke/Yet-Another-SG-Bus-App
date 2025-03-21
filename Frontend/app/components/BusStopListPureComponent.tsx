@@ -3,7 +3,7 @@ import { Pressable, Text, ToastAndroid, View } from "react-native";
 import Collapsible from "react-native-collapsible";
 import { Icon, ListItem, Overlay } from "react-native-elements";
 import AppStyles from "../../assets/css/AppStyles";
-import { GetBusStop, SaveSettings } from "../api/api";
+import { AddCodeToSettings, GetBusStop, SaveSettings } from "../api/api";
 import AuthConsumer from "../context/AuthContext";
 import BusStop from "./BusStop";
 
@@ -161,7 +161,11 @@ export default class BusStopListPureComponent extends PureComponent<
 																		!state.overlayVisible,
 																}),
 																() => {
-																	SaveSettings(
+																	// SaveSettings(
+																	// 	auth.token,
+																	// 	code
+																	// )
+																	AddCodeToSettings(
 																		auth.token,
 																		code
 																	)
@@ -207,7 +211,12 @@ export default class BusStopListPureComponent extends PureComponent<
 																		!state.overlayVisible,
 																}),
 																() => {
-																	SaveSettings(
+																	// SaveSettings(
+																	// 	auth.token,
+																	// 	code,
+																	// 	false
+																	// )
+																	AddCodeToSettings(
 																		auth.token,
 																		code,
 																		false
