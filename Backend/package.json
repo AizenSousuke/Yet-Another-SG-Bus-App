@@ -33,9 +33,9 @@
 		"test": "jest --watch --all --detectOpenHandles",
 		"start": "cross-env NODE_ENV=development yarn nodemon server.ts",
 		"start-online": "node server.js",
-		"seed": "npx prisma db seed",
 		"generate": "rm -rf tmp && mkdir tmp && cat prisma/*.prisma > tmp/schemaCombined.prisma && npx prisma generate --schema=tmp/schemaCombined.prisma && rm tmp/schemaCombined.prisma && rm -rf tmp",
-		"db": "rm -rf tmp && mkdir tmp && cat prisma/*.prisma > tmp/schemaCombined.prisma && npx prisma db push --schema=tmp/schemaCombined.prisma && rm tmp/schemaCombined.prisma && rm -rf tmp"
+		"db": "rm -rf tmp && mkdir tmp && cat prisma/*.prisma > tmp/schemaCombined.prisma && npx prisma db push --schema=tmp/schemaCombined.prisma && rm tmp/schemaCombined.prisma && rm -rf tmp",
+		"seed": "npx prisma db seed"
 	},
 	"prisma": {
 		"seed": "ts-node prisma/seed.ts"
