@@ -15,7 +15,10 @@ import {
 	loggedIn,
 	setToken,
 } from "./app/redux/features/homePage/homePageSlice";
-import { addBusStopBus } from "./app/redux/features/busStops/busStopsSlice";
+import {
+	addBusStopBus,
+	emptyBusStop,
+} from "./app/redux/features/busStops/busStopsSlice";
 import { Direction } from "./app/classes/Enums";
 import { useSelector } from "react-redux";
 
@@ -151,10 +154,8 @@ const App = () => {
 					);
 					var settings = res.settings?.settingsSchema;
 					if (settings) {
-						const goingHome: Array<string> =
-						settings.goingHome;
-						const goingOut: Array<string> =
-						settings.goingOut;
+						const goingHome: Array<string> = settings.goingHome;
+						const goingOut: Array<string> = settings.goingOut;
 						console.log(
 							"Going home: ",
 							goingHome,
@@ -179,6 +180,17 @@ const App = () => {
 						});
 						ToastAndroid.show(res.msg, ToastAndroid.SHORT);
 					} else {
+						console.error("No Settings in method _getData");
+						store.dispatch(
+							emptyBusStop({
+								direction: Direction.GoingHome,
+							})
+						);
+						store.dispatch(
+							emptyBusStop({
+								direction: Direction.GoingOut,
+							})
+						);
 						ToastAndroid.show(res.msg, ToastAndroid.SHORT);
 					}
 				})

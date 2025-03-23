@@ -53,6 +53,13 @@ export const BusStopsSlice = createSlice({
                 delete state[currentDirection][busStopCode];
             }
         },
+        emptyBusStop: (state, action) => {
+            const { direction } = action.payload;
+
+            const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
+
+            state[currentDirection] = [];
+        },
         goingOut: (state, action) => {
             state.GoingOut = action.payload;
         },
@@ -77,4 +84,4 @@ export const BusStopsSlice = createSlice({
     }
 })
 
-export const { addBusStopBus, removeBusStopBus } = BusStopsSlice.actions;
+export const { addBusStopBus, removeBusStopBus, emptyBusStop } = BusStopsSlice.actions;
