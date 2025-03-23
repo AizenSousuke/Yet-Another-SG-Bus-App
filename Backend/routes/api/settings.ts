@@ -146,21 +146,46 @@ router.put("/update",
 				return res.status(404).json({ error: "Bus stop not found" });
 			}
 
-			const updatedSettings = await prisma.setting.update({
+			const updatedSettings = await prisma.setting.upsert({
 				where: { userId },
-				data: {
+				create: {
+					userId,
 					settingsSchema: {
-						update: {
+						create: {
 							[GoingOut ? "goingOut" : "goingHome"]: {
 								create: {
 									busStop: {
-										connect: {
-											busStopCode: busStop.busStopCode
+										connect: { busStopCode: busStop.busStopCode }
+									}
+								}
+							}
+						}
+					}
+				},
+				update: {
+					settingsSchema: {
+						upsert: {
+							create: {
+								[GoingOut ? "goingOut" : "goingHome"]: {
+									create: {
+										busStop: {
+											connect: { busStopCode: busStop.busStopCode }
 										}
-									},
+									}
 								}
 							},
-						},
+							update: {
+								[GoingOut ? "goingOut" : "goingHome"]: {
+									create: {
+										busStop: {
+											connect: {
+												busStopCode: busStop.busStopCode
+											}
+										},
+									}
+								},
+							},
+						}
 					},
 				},
 				include: { settingsSchema: true },
