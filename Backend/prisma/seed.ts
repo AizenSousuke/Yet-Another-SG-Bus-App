@@ -62,6 +62,6 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         console.log("Seeding completed");
     }, {
         // In ms
-        timeout: 1000 * 60 * 5
+        timeout: 1000 * 60 * 10
     });
 })();
