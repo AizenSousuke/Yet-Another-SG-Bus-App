@@ -13,5 +13,5 @@ model BusRoute {
     sun_firstBus String
     sun_lastBus  String
 
-    busStop BusStop @relation(fields: [busStopCode], references: [busStopCode])
+    busStop BusStop @relation(fields: [busStopCode], references: [busStopCode], onDelete: Cascade)
 }
