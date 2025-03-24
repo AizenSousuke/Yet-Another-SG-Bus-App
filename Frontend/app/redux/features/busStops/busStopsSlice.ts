@@ -58,7 +58,7 @@ export const BusStopsSlice = createSlice({
 
             const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
 
-            state[currentDirection] = [];
+            state[currentDirection] = {};
         },
         goingOut: (state, action) => {
             state.GoingOut = action.payload;
