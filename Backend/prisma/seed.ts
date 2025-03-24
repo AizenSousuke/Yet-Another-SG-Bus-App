@@ -28,13 +28,6 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         await transaction.busRoute.deleteMany({});
 
         // Prepare the data for `createMany`
-        // const busStopsData = arrayOfBusStops.map((busStop) => ({
-        //     busStopCode: busStop.BusStopCode,
-        //     location: JSON.stringify([busStop.Longitude, busStop.Latitude]),
-        //     description: busStop.Description,
-        //     roadName: busStop.RoadName
-        // }));
-
         const busStopsData = arrayOfBusStops.map((busStop) => ({
             busStopCode: busStop.BusStopCode,
             location: {
@@ -46,7 +39,7 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         }));       
         
         await prisma.$runCommandRaw({
-            createIndexes: "busStop",
+            createIndexes: "BusStop",
             indexes: [
               {
                 key: { location: "2dsphere" },

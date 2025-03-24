@@ -74,6 +74,7 @@ export const LocationModal = () => {
 				);
 
 				// console.log(stops.busStopsNearby[0]);
+				// console.log(JSON.stringify(stops));
 
 				if (stops.busStopsNearby) {
 					setNearbyBusStops(stops.busStopsNearby);
@@ -104,6 +105,7 @@ export const LocationModal = () => {
 					maxZoomLevel={17}
 				>
 					{nearbyBusStops &&
+						nearbyBusStops.length > 0 &&
 						nearbyBusStops.map((marker: any, index: number) => (
 							<Marker
 								key={index}
