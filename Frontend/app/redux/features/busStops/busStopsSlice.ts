@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../../api/api"
 import { ToastAndroid } from "react-native";
 import { Direction } from "../../../classes/Enums";
-import { IBusStopSlice } from "../../../interfaces/IBusStopSlice";
+import { IBusStopSlice, ISavedBusStopBuses } from "../../../interfaces/IBusStopSlice";
 
 const initialState: IBusStopSlice = {
     GoingOut: {},
@@ -23,31 +23,35 @@ export const BusStopsSlice = createSlice({
     reducers: {
         addBusStopBus: (state, action) => {
             console.log("action payload: " + JSON.stringify(action.payload));
-            const { direction, busStopCode, busNumber }: { direction: Direction, busStopCode: number, busNumber?: number } = action.payload;
+            const { direction, busStopCode, busNumber }: { direction: Direction, busStopCode: string, busNumber?: string } = action.payload;
             console.log("bus stop code: " + JSON.stringify(busStopCode));
 
             const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
 
-            if (!state[currentDirection][busStopCode]) {
-                state[currentDirection][busStopCode] = { Buses: {} };
+            let busStop: ISavedBusStopBuses = state[currentDirection][busStopCode];
+
+            if (!busStop) {
+                state[currentDirection][busStopCode] = { BusesTracked: {} };
             }
 
             if (busNumber) {
-                state[currentDirection][busStopCode].Buses[busNumber] = busNumber;
+                state[currentDirection][busStopCode].BusesTracked[busNumber] = busNumber;
             }
+
+            console.log("State after addBusStopBus: " + JSON.stringify(state[currentDirection]));
         },
         removeBusStopBus: (state, action) => {
-            const { direction, busStopCode, busNumber }: { direction: Direction, busStopCode: number, busNumber: number } = action.payload;
+            const { direction, busStopCode, busNumber }: { direction: Direction, busStopCode: string, busNumber: string } = action.payload;
 
             const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
 
-            let busStop = state[currentDirection][busStopCode];
+            let busStop: ISavedBusStopBuses = state[currentDirection][busStopCode];
             if (!busStop) {
-                busStop = { Buses: {} };
+                state[currentDirection][busStopCode] = { BusesTracked: {} };
             }
 
             if (busNumber) {
-                delete busStop.Buses[busNumber];
+                delete busStop.BusesTracked[busNumber];
             } else {
                 // Delete the whole busStop
                 delete state[currentDirection][busStopCode];

@@ -1,8 +1,17 @@
+export interface IBusStopSetting {
+    Id: string;
+    BusStopId: string;
+    BusServicesIDs: string[];
+
+    SettingsSchemaGoingHomeId?: string;
+    SettingsSchemaGoingOutId?: string;
+}
+
 export interface IBusStopSlice {
-    GoingOut: { [BusStopCode: number]: ISavedBusStopBuses };
-    GoingHome: { [BusStopCode: number]: ISavedBusStopBuses };
+    GoingOut: { [BusStopCode: string]: ISavedBusStopBuses };
+    GoingHome: { [BusStopCode: string]: ISavedBusStopBuses };
 }
 
 export interface ISavedBusStopBuses {
-    BusesTracked: number[];
+    BusesTracked: { [busNumber: string]: any };
 }
