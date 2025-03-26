@@ -100,6 +100,10 @@ const App = () => {
 						);
 					} else {
 						console.log("No token found in Async Storage.");
+						ToastAndroid.show(
+							"Please re-login. No token in storage.",
+							ToastAndroid.SHORT
+						);
 					}
 				}
 			);

@@ -5,6 +5,7 @@ import {
 	ActivityIndicator,
 	View,
 	Text,
+	ViewabilityConfig,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { SearchBusStop } from "../api/api";
@@ -72,8 +73,8 @@ const Search = () => {
 		}
 	};
 
-	const viewabilityConfig = {
-		minimumViewTime: 1000,
+	const viewabilityConfig: ViewabilityConfig = {
+		minimumViewTime: 1000
 	};
 
 	useEffect(() => {
@@ -84,39 +85,38 @@ const Search = () => {
 	}, []);
 
 	return (
-		<>
-			<FlatList
-				windowSize={2}
-				ListHeaderComponent={
-					<SearchBar
-						placeholder={"Search for a bus stop"}
-						onChangeText={(value) => {
-							updateSearch(value);
-						}}
-						onSubmitEditing={() => {
-							console.log("Searching for: " + search);
-							searchForBusStops();
-						}}
-						value={search.toString()}
-						ref={searchBarRef}
-					/>
-				}
-				stickyHeaderIndices={[0]}
-				initialNumToRender={limitResultsPerPage}
-				maxToRenderPerBatch={limitResultsPerPage}
-				data={busStops}
-				renderItem={renderItem}
-				keyExtractor={(item) => item.busStopCode}
-				viewabilityConfig={viewabilityConfig}
-				ListEmptyComponent={
-					loading ? (
-						<ActivityIndicator animating={loading} size={"large"} />
-					) : (
-						<View></View>
-					)
-				}
-			/>
-		</>
+		<FlatList
+			ListHeaderComponent={
+				<SearchBar
+				placeholder={"Search for a bus stop"}
+				onChangeText={(value) => {
+					updateSearch(value);
+				}}
+				onSubmitEditing={() => {
+					console.log("Searching for: " + search);
+					searchForBusStops();
+				}}
+				value={search.toString()}
+				ref={searchBarRef}
+				/>
+			}
+			windowSize={5}
+			// For search bar
+			stickyHeaderIndices={[0]}
+			initialNumToRender={limitResultsPerPage}
+			maxToRenderPerBatch={limitResultsPerPage}
+			data={busStops}
+			renderItem={renderItem}
+			keyExtractor={(item) => item.busStopCode}
+			viewabilityConfig={viewabilityConfig}
+			ListEmptyComponent={
+				loading ? (
+					<ActivityIndicator animating={loading} size={"large"} />
+				) : (
+					<View></View>
+				)
+			}
+		/>
 	);
 };
 

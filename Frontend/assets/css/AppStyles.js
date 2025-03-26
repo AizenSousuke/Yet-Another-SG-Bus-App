@@ -158,7 +158,7 @@ export default StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-evenly",
 	},
-	savedBusStopNoData: {
+	busStopNoData: {
 		flex: 1,
 		display: "flex",
 		textAlign: "center",

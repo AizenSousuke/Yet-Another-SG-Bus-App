@@ -298,7 +298,7 @@ export default class BusStopListPureComponent extends PureComponent<
 						{this.state.busStopData != null ? (
 							<BusStop busStopData={this.state.busStopData} />
 						) : (
-							<Text>No Data</Text>
+							<Text style={AppStyles.busStopNoData}>No Data</Text>
 						)}
 					</Collapsible>
 				</>
