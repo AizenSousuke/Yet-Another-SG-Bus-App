@@ -13,7 +13,8 @@ const BusStop = ({ busStopData }: { busStopData: any }) => {
 	useEffect(() => {
 		(async () => {
 			GetBusStopByCode(busStopData?.BusStopCode).then((result) => {
-				setBusStopLocation({ Location: result.busStop?.Location });
+				// console.log(JSON.stringify(result.busStop));
+				setBusStopLocation({ Location: result.busStop?.location });
 			});
 		})();
 	}, []);

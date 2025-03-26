@@ -30,6 +30,7 @@ const BusLocation = ({
 		setTimeout(() => {
 			// Animate to bus stop location if possible
 			if (busStopLocation && map) {
+				// console.log(JSON.stringify(busStopLocation));
 				map?.current?.animateToRegion(
 					{
 						latitude: busStopLocation.Location[1],
