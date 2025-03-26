@@ -157,5 +157,13 @@ export default StyleSheet.create({
 		flex: 0.8,
 		flexDirection: "row",
 		justifyContent: "space-evenly",
+	},
+	savedBusStopNoData: {
+		flex: 1,
+		display: "flex",
+		textAlign: "center",
+		padding: 30,
+		backgroundColor: "white",
+		fontWeight: "600"
 	}
 });

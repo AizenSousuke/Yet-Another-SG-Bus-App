@@ -156,7 +156,7 @@ const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; Goin
 				{busStopData != null ? (
 					<BusStop busStopData={busStopData} />
 				) : (
-					<Text>No Data</Text>
+					<Text style={AppStyles.savedBusStopNoData}>No Data</Text>
 				)}
 			</Collapsible>
 		</View>
