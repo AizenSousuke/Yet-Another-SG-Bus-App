@@ -107,7 +107,7 @@ passport.use(
 				});
 
 				const user = await prisma.user.findFirstOrThrow({
-					select: {
+					where: {
 						email: profile.emails[0].value,
 					}
 				});
