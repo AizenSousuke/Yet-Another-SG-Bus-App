@@ -38,7 +38,8 @@ export default class BusStopListPureComponent extends PureComponent<
 			busStopData: null,
 		};
 		this.getBusStopData = this.getBusStopData.bind(this);
-		this.getBusStopData();
+		// Don't load data on mount
+		// this.getBusStopData();
 	}
 
 	getBusStopData() {
@@ -82,6 +83,12 @@ export default class BusStopListPureComponent extends PureComponent<
 									) {
 										// console.log("Firing CollapseEvent event");
 										this.props.CollapseEvent(this.props.code);
+									}
+
+									// if state is not collapsed, then load data
+									if (!this.state.isCollapsed) {
+										console.log(`Loading bus stop data for bus stop code: ${code}`);
+										this.getBusStopData();
 									}
 								}
 							);
