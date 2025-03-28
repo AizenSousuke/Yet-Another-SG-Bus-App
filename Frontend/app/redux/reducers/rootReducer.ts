@@ -8,7 +8,7 @@ const appReducer = combineReducers({
     home: HomePageSlice.reducer,
     busStop: BusStopsSlice.reducer,
     // user: userReducer,
-    // settings: settingsReducer,
+    settings: settingsReducer,
 });
 
 export const RESET = 'RESET';

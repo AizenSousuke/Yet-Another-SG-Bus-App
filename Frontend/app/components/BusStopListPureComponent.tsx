@@ -37,9 +37,8 @@ export default class BusStopListPureComponent extends PureComponent<
 			isCollapsed: true,
 			busStopData: null,
 		};
+		
 		this.getBusStopData = this.getBusStopData.bind(this);
-		// Don't load data on mount
-		// this.getBusStopData();
 	}
 
 	getBusStopData() {
