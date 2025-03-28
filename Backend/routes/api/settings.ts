@@ -241,4 +241,36 @@ router.put("/remove",
 		}
 	})
 
+/**
+ * Delete the entire settings for the user
+ * */
+router.delete("/delete",
+	authMiddleware,
+	async (req: any, res) => {
+		try {
+			const userId = req.user.id;
+
+			const settingsExists = await prisma.setting.findUnique({
+				where: {
+					userId: userId
+				}
+			});
+
+			if (!settingsExists) {
+				return res.status(404).json({ msg: "Settings not found" });
+			}
+
+			await prisma.setting.delete({
+				where: {
+					userId: userId
+				}
+			});
+
+			return res.status(200).json({ msg: "Successfully deleted settings", settings: null });
+		} catch (error) {
+			console.error("Error deleting settings:", error);
+			return res.status(500).json({ error: "Failed to delete settings" });
+		}
+	})
+
 export default router;

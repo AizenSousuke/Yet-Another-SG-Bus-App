@@ -4,10 +4,13 @@ export default class PrismaSingleton {
     private static prisma: PrismaClient | null = null;
 
     static getPrisma(): PrismaClient {
-        console.log("Getting prisma variable");
+        // console.log("Getting prisma variable");
         if (PrismaSingleton.prisma == null) {
-            console.log("Resetting prisma variable");
-            PrismaSingleton.prisma = new PrismaClient();
+            console.log("Resetting prisma variable and creating a new one");
+            PrismaSingleton.prisma = new PrismaClient({
+                // Log all database queries
+                log: ["info", "warn", "error"],
+            });
         }
 
         return PrismaSingleton.prisma;

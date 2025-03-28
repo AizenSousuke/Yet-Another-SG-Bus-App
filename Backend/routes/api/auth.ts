@@ -164,8 +164,8 @@ router.post(
 
 			console.log("Is prisma null?", prisma == null);
 
-			const allUser = await prisma.user.findMany({});
-			console.log("All users: " + JSON.stringify(allUser));
+			// const allUser = await prisma.user.findMany({});
+			// console.log("All users: " + JSON.stringify(allUser));
 
 			const user = await prisma.user.findFirst(
 				{
