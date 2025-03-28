@@ -2,13 +2,14 @@ import { combineReducers, UnknownAction } from "@reduxjs/toolkit";
 import { createAction } from '@reduxjs/toolkit';
 import { HomePageSlice } from "../features/homePage/homePageSlice";
 import { BusStopsSlice } from "../features/busStops/busStopsSlice";
+import { SettingsSlice } from "../features/settings/settingsSlice";
 
 // Optional root Reducer
 const appReducer = combineReducers({
     home: HomePageSlice.reducer,
     busStop: BusStopsSlice.reducer,
     // user: userReducer,
-    settings: settingsReducer,
+    settings: SettingsSlice.reducer,
 });
 
 export const RESET = 'RESET';
