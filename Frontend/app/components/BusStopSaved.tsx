@@ -15,11 +15,12 @@ import ColourScheme from "../settings/colourScheme.json";
 import { store } from "../redux/store";
 import { removeBusStopBus } from "../redux/features/busStops/busStopsSlice";
 import { Direction } from "../classes/Enums";
+import OptionsOverlay from "./OptionsOverlay";
 
 /**
  * Component that is used for Home\Going out page
  */
-const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; GoingOut: boolean, settingsUpdaterFunc: Function }) => {
+const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 	const [busStop, setBusStop] = useState(null);
 	const [busStopData, setBusStopData] = useState(null);
 	const [isCollapsed, setIsCollapsed] = useState(true);
@@ -78,66 +79,12 @@ const BusStopSaved = ({ code, GoingOut, settingsUpdaterFunc }: { code: any; Goin
 					</ListItem.Subtitle>
 				</ListItem.Content>
 				{isCollapsed ? (
-					<Pressable
-						onPress={() => setOverlayVisible(!overlayVisible)}
-						android_ripple={{ borderless: true }}
-					>
-						<View>
-							<Icon name="more-vert" />
-							<Overlay
-								isVisible={overlayVisible}
-								onBackdropPress={() =>
-									setOverlayVisible(!overlayVisible)
-								}
-							>
-								<AuthConsumer>
-									{(auth) => {
-										return (
-											<View>
-												<ListItem>
-													<ListItem.Title>
-														What do you want to do?
-													</ListItem.Title>
-												</ListItem>
-												<ListItem
-													onPress={async () => {
-														setOverlayVisible(
-															!overlayVisible
-														);
-														
-														store.dispatch(removeBusStopBus({
-															direction: GoingOut ? Direction.GoingOut : Direction.GoingHome,
-															busStopCode: code
-														}));
-
-														await RemoveCodeFromSettings(
-															auth.token,
-															code,
-															GoingOut
-														)
-															.then(async (res) => {
-																// Refresh state
-																await settingsUpdaterFunc();
-															})
-															.catch((error) => {
-																ToastAndroid.show(
-																	error,
-																	ToastAndroid.SHORT
-																);
-															});
-													}}
-												>
-													<ListItem.Subtitle>
-														Delete
-													</ListItem.Subtitle>
-												</ListItem>
-											</View>
-										);
-									}}
-								</AuthConsumer>
-							</Overlay>
-						</View>
-					</Pressable>
+					<OptionsOverlay
+						overlayVisible={overlayVisible}
+						setOverlayVisible={setOverlayVisible}
+						GoingOut={GoingOut}
+						code={code}
+					/>
 				) : (
 					<Pressable
 						onPress={() => {
