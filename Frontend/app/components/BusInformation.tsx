@@ -58,7 +58,10 @@ const BusInformation = ({
 					"and bus stop code",
 					busStopCode
 				);
-				data = await GetBusRouteDataWithBusStopCode(busNumber, busStopCode);
+				data = await GetBusRouteDataWithBusStopCode(
+					busNumber,
+					busStopCode
+				);
 				// console.log("Bus data: " + JSON.stringify(data));
 				if (data) {
 					setInformation(data.routes);
@@ -68,12 +71,14 @@ const BusInformation = ({
 	};
 
 	return (
-		<SafeAreaView style={{
-			flexGrow: 1,
-			display: "flex",
-			width: "80%",
-			maxHeight: "90%",
-			}}>
+		<SafeAreaView
+			style={{
+				flexGrow: 1,
+				display: "flex",
+				width: "80%",
+				maxHeight: "90%",
+			}}
+		>
 			<Header
 				centerComponent={
 					<Text style={AppStyles.busRouteNumber}>
@@ -94,48 +99,72 @@ const BusInformation = ({
 					updatePageData(index);
 				}}
 			/>
-			<Card containerStyle={{flexGrow: 1, maxHeight: "90%"}}>
-				<FlatList 
+			<Card containerStyle={{ flexGrow: 1, maxHeight: "90%", marginTop: 0 }}>
+				<FlatList
 					contentContainerStyle={{
 						paddingBottom: 0,
 					}}
 					data={selectedIndex === 1 ? route : []}
 					keyExtractor={(item, index) => index.toString()}
 					ListHeaderComponent={
-					selectedIndex === 0 ? (
-						<>
-						<Card.Title>Information</Card.Title>
-						<Card.Divider width={1} />
-						<Table information={information} />
-						</>
-					) : (
-						<>
-						<Card.Title testID="RoutePage">Route</Card.Title>
-						<Card.Divider width={1} />
-						</>
-					)
+						selectedIndex === 0 ? (
+							<>
+								<Card.Title>Information</Card.Title>
+								<Card.Divider width={1} />
+								<Table information={information} />
+							</>
+						) : (
+							<>
+								<Card.Title testID="RoutePage">
+									Route
+								</Card.Title>
+								<Card.Divider width={1} />
+							</>
+						)
 					}
 					renderItem={({ item, index }) => (
-							<ListItem.Accordion
-								key={index}
-								content={
-								<ListItem.Content style={{ backgroundColor: "firebrick", padding: 10, borderRadius: 5 }}>
-									<ListItem.Title style={{ color: "white", fontSize: 12 }}>
-									{(item.busStop ? item.busStop.description : "No description") + " (" + item.busStopCode + ")"}
+						<ListItem.Accordion
+							key={index}
+							content={
+								<ListItem.Content
+									style={{
+										backgroundColor: "firebrick",
+										padding: 10,
+										borderRadius: 5,
+									}}
+								>
+									<ListItem.Title
+										style={{ color: "white", fontSize: 12 }}
+									>
+										{(item.busStop
+											? item.busStop.description
+											: "No description") +
+											" (" +
+											item.busStopCode +
+											")"}
 									</ListItem.Title>
 								</ListItem.Content>
-								}
-								isExpanded={expanded === index}
-								// noIcon
-								onPress={() => setExpanded(expanded === index ? null : index)}
+							}
+							isExpanded={expanded === index}
+							// noIcon
+							onPress={() =>
+								setExpanded(expanded === index ? null : index)
+							}
+						>
+							<ListItem
+								containerStyle={{
+									marginVertical: 0,
+									paddingVertical: 0,
+								}}
 							>
-								<ListItem containerStyle={{ marginVertical: 0, paddingVertical: 0 }}>
-									<ListItem.Content>
-										{/* Creating empty spaces */}
-										{expanded === index ? <Text>{item.busStop?.description}</Text> : null}
-									</ListItem.Content>
-								</ListItem>
-							</ListItem.Accordion>
+								<ListItem.Content>
+									{/* Creating empty spaces */}
+									{expanded === index ? (
+										<Text>{item.busStop?.description}</Text>
+									) : null}
+								</ListItem.Content>
+							</ListItem>
+						</ListItem.Accordion>
 					)}
 				/>
 			</Card>

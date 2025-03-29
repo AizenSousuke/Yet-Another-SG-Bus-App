@@ -37,7 +37,7 @@ export default StyleSheet.create({
 		borderRadius: 50,
 	},
 	buttonGroupButton: {
-		width: "100%",
+		margin: 3,
 		height: 70,
 		backgroundColor: "#e6af54",
 		alignItems: "center",
