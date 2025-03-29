@@ -36,17 +36,19 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
             },
             description: busStop.Description,
             roadName: busStop.RoadName
-        }));       
-        
+        }));
+
+        // Note: Not persisted in DB. Need to use mongosh
+        //  yasgbadocker> db.BusStop.createIndex({ location: "2dsphere" }, { name: "location_2dsphere" })
         await prisma.$runCommandRaw({
-            createIndexes: "BusStop",
+            createIndexes: "busStop",
             indexes: [
-              {
-                key: { location: "2dsphere" },
-                name: "location_2dsphere"
-              }
+                {
+                    key: { location: "2dsphere" },
+                    name: "location_2dsphere"
+                }
             ]
-          });          
+        });
 
         const busRoutesData = arrayOfBusRoutes.map((busRoutes) => ({
             serviceNo: busRoutes.ServiceNo,

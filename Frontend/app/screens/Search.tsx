@@ -74,7 +74,7 @@ const Search = () => {
 	};
 
 	const viewabilityConfig: ViewabilityConfig = {
-		minimumViewTime: 1000
+		minimumViewTime: 1000,
 	};
 
 	useEffect(() => {
@@ -88,16 +88,20 @@ const Search = () => {
 		<FlatList
 			ListHeaderComponent={
 				<SearchBar
-				placeholder={"Search for a bus stop"}
-				onChangeText={(value) => {
-					updateSearch(value);
-				}}
-				onSubmitEditing={() => {
-					console.log("Searching for: " + search);
-					searchForBusStops();
-				}}
-				value={search.toString()}
-				ref={searchBarRef}
+					placeholder={"Search for a bus stop"}
+					onChangeText={(value) => {
+						updateSearch(value);
+					}}
+					onSubmitEditing={() => {
+						console.log("Searching for: " + search);
+						searchForBusStops();
+					}}
+					value={search.toString()}
+					ref={searchBarRef}
+					style={{
+						paddingTop: 10,
+						paddingBottom: 10,
+					}}
 				/>
 			}
 			windowSize={5}
@@ -111,7 +115,11 @@ const Search = () => {
 			viewabilityConfig={viewabilityConfig}
 			ListEmptyComponent={
 				loading ? (
-					<ActivityIndicator animating={loading} size={"large"} />
+					<ActivityIndicator
+						animating={loading}
+						size={"large"}
+						style={{ padding: 10 }}
+					/>
 				) : (
 					<View></View>
 				)

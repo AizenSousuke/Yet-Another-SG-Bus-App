@@ -11,6 +11,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as API from "../api/api";
 import BusStopListPureComponent from "../components/BusStopListPureComponent";
+import AppStyles from "../../assets/css/AppStyles";
 
 export const LocationModal = () => {
 	const [location, setLocation] = useState({
@@ -88,8 +89,8 @@ export const LocationModal = () => {
 			flex: 1,
 		},
 		map: {
-			height: 250,
-			width: 400,
+			height: "40%",
+			width: "auto",
 		},
 	});
 
@@ -123,7 +124,7 @@ export const LocationModal = () => {
 						))}
 				</MapView>
 			) : (
-				<Text>No map loaded.</Text>
+				<Text style={AppStyles.busStopNoData}>No map loaded.</Text>
 			)}
 			<FlatList
 				keyExtractor={(item, index) => index.toString()}

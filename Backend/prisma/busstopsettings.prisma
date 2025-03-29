@@ -1,7 +1,7 @@
 // For saving in settings
 model BusStopSetting {
     id        String  @id @default(auto()) @map("_id") @db.ObjectId
-    busStop   BusStop @relation(fields: [busStopId], references: [id])
+    busStop   BusStop @relation(fields: [busStopId], references: [id], onDelete: Cascade)
     busStopId String  @db.ObjectId
 
     busServicesIDs String[]     @db.ObjectId

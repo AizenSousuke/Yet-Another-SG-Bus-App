@@ -131,43 +131,76 @@ router.patch(
 
 export default router;
 
+// export async function getPromisesForAllBusStopsFromLTADataMallAPI(res) {
+// 	let arrayOfBusStops = [];
+// 	let allBusStopsCount = 0;
+// 	let anyMoreDataToParse = true;
+// 	let skip = 0;
+// 	let skipBy = 500;
+
+// 	while (anyMoreDataToParse) {
+// 		await Util.delay(100);
+
+// 		await axios
+// 			.get(
+// 				"http://datamall2.mytransport.sg/ltaodataservice/BusStops",
+// 				{ headers: header, params: { $skip: skip } }
+// 			)
+// 			.then(async (response) => {
+// 				if (response.data.value.length == 0) {
+// 					anyMoreDataToParse = false;
+// 					console.log("Finish getting data at skip: " + skip);
+// 				}
+
+// 				console.log("response length from datamall api: ", response.data.value.length, "skip:", skip);
+// 				allBusStopsCount += response.data.value.length;
+// 				response.data.value.map(busStop => {
+// 					arrayOfBusStops.push(busStop);
+// 				});
+
+// 				return response.data.value;
+// 			})
+// 			.catch((error) => {
+// 				console.error(error.message);
+// 				return [];
+// 			});
+
+// 		skip += skipBy;
+// 	}
+
+// 	return { arrayOfBusStops, allBusStopsCount };
+// }
+
 export async function getPromisesForAllBusStopsFromLTADataMallAPI(res) {
-	let arrayOfBusStops = [];
-	let allBusStopsCount = 0;
-	let anyMoreDataToParse = true;
-	let skip = 0;
-	let skipBy = 500;
+    let arrayOfBusStops = [];
+    let skip = 0;
+    const skipBy = 500;
+    const maxParallelRequests = 5; // Adjust as needed
 
-	while (anyMoreDataToParse) {
-		await Util.delay(100);
+    while (true) {
+        await Util.delay(100); 
 
-		await axios
-			.get(
-				"http://datamall2.mytransport.sg/ltaodataservice/BusStops",
-				{ headers: header, params: { $skip: skip } }
-			)
-			.then(async (response) => {
-				if (response.data.value.length == 0) {
-					anyMoreDataToParse = false;
-					console.log("Finish getting data at skip: " + skip);
-				}
+        const requests = Array.from({ length: maxParallelRequests }, (_, i) =>
+            axios.get("http://datamall2.mytransport.sg/ltaodataservice/BusStops", {
+                headers: header,
+                params: { $skip: skip + i * skipBy }
+            }).catch(error => {
+                console.error(`Error fetching skip=${skip + i * skipBy}:`, error.message);
+                return { data: { value: [] } }; // Prevent breaking the loop
+            })
+        );
 
-				console.log("response length from datamall api: ", response.data.value.length, "skip:", skip);
-				allBusStopsCount += response.data.value.length;
-				response.data.value.map(busStop => {
-					arrayOfBusStops.push(busStop);
-				});
+        const responses = await Promise.all(requests);
+        const allData = responses.flatMap(res => res.data.value);
 
-				return response.data.value;
-			})
-			.catch((error) => {
-				console.error(error.message);
-				return [];
-			});
+        if (allData.length === 0) break;
 
-		skip += skipBy;
-	}
+        arrayOfBusStops.push(...allData);
+        skip += skipBy * maxParallelRequests;
+        console.log(`Fetched ${allData.length} records, Total: ${arrayOfBusStops.length}`);
+    }
 
-	return { arrayOfBusStops, allBusStopsCount };
+    return { arrayOfBusStops, allBusStopsCount: arrayOfBusStops.length };
 }
+
 

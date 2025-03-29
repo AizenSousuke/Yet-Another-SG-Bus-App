@@ -118,43 +118,80 @@ router.get("/", async (req: any, res) => {
  */
 export default router;
 
+// export async function getPromisesForAllBusRoutesFromLTADataMallAPI(res) {
+// 	let arrayOfBusRoutes = [];
+// 	let allBusRoutesCount = 0;
+// 	let anyMoreDataToParse = true;
+// 	let skip = 0;
+// 	let skipBy = 500;
+
+// 	while (anyMoreDataToParse) {
+// 		await Util.delay(100);
+
+// 		await axios
+// 			.get(
+// 				"http://datamall2.mytransport.sg/ltaodataservice/BusRoutes",
+// 				{ headers: header, params: { $skip: skip } }
+// 			)
+// 			.then(async (response) => {
+// 				if (response.data.value.length == 0) {
+// 					anyMoreDataToParse = false;
+// 					console.log("Finish getting data at skip: " + skip);
+// 				}
+
+// 				console.log("response length from datamall api: ", response.data.value.length, "skip:", skip);
+// 				allBusRoutesCount += response.data.value.length;
+// 				response.data.value.map(busRoutes => {
+// 					arrayOfBusRoutes.push(busRoutes);
+// 				});
+
+// 				return response.data.value;
+// 			})
+// 			.catch((error) => {
+// 				console.error(error.message);
+// 				return [];
+// 			});
+
+// 		skip += skipBy;
+// 	}
+
+// 	return { arrayOfBusRoutes, allBusRoutesCount };
+// }
+
 export async function getPromisesForAllBusRoutesFromLTADataMallAPI(res) {
 	let arrayOfBusRoutes = [];
 	let allBusRoutesCount = 0;
-	let anyMoreDataToParse = true;
 	let skip = 0;
-	let skipBy = 500;
+	const skipBy = 500;
 
-	while (anyMoreDataToParse) {
-		await Util.delay(100);
+	while (true) {
+		await Util.delay(100); // Respect API rate limits
 
-		await axios
-			.get(
+		try {
+			const response = await axios.get(
 				"http://datamall2.mytransport.sg/ltaodataservice/BusRoutes",
 				{ headers: header, params: { $skip: skip } }
-			)
-			.then(async (response) => {
-				if (response.data.value.length == 0) {
-					anyMoreDataToParse = false;
-					console.log("Finish getting data at skip: " + skip);
-				}
+			);
 
-				console.log("response length from datamall api: ", response.data.value.length, "skip:", skip);
-				allBusRoutesCount += response.data.value.length;
-				response.data.value.map(busRoutes => {
-					arrayOfBusRoutes.push(busRoutes);
-				});
+			const { value } = response.data;
+			const dataLength = value.length;
 
-				return response.data.value;
-			})
-			.catch((error) => {
-				console.error(error.message);
-				return [];
-			});
+			if (dataLength === 0) {
+				console.log(`Finished fetching data at skip: ${skip}`);
+				break; // Exit loop if no more data
+			}
 
-		skip += skipBy;
+			console.log(`Fetched ${dataLength} bus routes, skip: ${skip}`);
+
+			arrayOfBusRoutes.push(...value);
+			allBusRoutesCount += dataLength;
+			skip += skipBy;
+
+		} catch (error) {
+			console.error(`Error fetching data: ${error.message}`);
+			break; // Stop loop on API failure
+		}
 	}
 
 	return { arrayOfBusRoutes, allBusRoutesCount };
 }
-
