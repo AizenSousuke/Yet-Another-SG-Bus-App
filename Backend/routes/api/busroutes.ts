@@ -159,39 +159,34 @@ export default router;
 // }
 
 export async function getPromisesForAllBusRoutesFromLTADataMallAPI(res) {
-	let arrayOfBusRoutes = [];
-	let allBusRoutesCount = 0;
-	let skip = 0;
-	const skipBy = 500;
+    let arrayOfBusRoutes = [];
+    let skip = 0;
+    const skipBy = 500;
+    const maxParallelRequests = 2; // Adjust as needed
 
-	while (true) {
-		await Util.delay(100); // Respect API rate limits
+    while (true) {
+        await Util.delay(100); 
 
-		try {
-			const response = await axios.get(
-				"http://datamall2.mytransport.sg/ltaodataservice/BusRoutes",
-				{ headers: header, params: { $skip: skip } }
-			);
+        const requests = Array.from({ length: maxParallelRequests }, (_, i) =>
+            axios.get("http://datamall2.mytransport.sg/ltaodataservice/BusRoutes", {
+                headers: header,
+                params: { $skip: skip + i * skipBy }
+            }).catch(error => {
+                console.error(`Error fetching skip=${skip + i * skipBy}:`, error.message);
+                return { data: { value: [] } }; // Prevent breaking the loop
+            })
+        );
 
-			const { value } = response.data;
-			const dataLength = value.length;
+        const responses = await Promise.all(requests);
+        const allData = responses.flatMap(res => res.data.value);
 
-			if (dataLength === 0) {
-				console.log(`Finished fetching data at skip: ${skip}`);
-				break; // Exit loop if no more data
-			}
+        if (allData.length === 0) break;
 
-			console.log(`Fetched ${dataLength} bus routes, skip: ${skip}`);
+        arrayOfBusRoutes.push(...allData);
+        skip += skipBy * maxParallelRequests;
+        console.log(`Fetched ${allData.length} records, Total: ${arrayOfBusRoutes.length}`);
+    }
 
-			arrayOfBusRoutes.push(...value);
-			allBusRoutesCount += dataLength;
-			skip += skipBy;
-
-		} catch (error) {
-			console.error(`Error fetching data: ${error.message}`);
-			break; // Stop loop on API failure
-		}
-	}
-
-	return { arrayOfBusRoutes, allBusRoutesCount };
+    return { arrayOfBusRoutes, allBusRoutesCount: arrayOfBusRoutes.length };
 }
+

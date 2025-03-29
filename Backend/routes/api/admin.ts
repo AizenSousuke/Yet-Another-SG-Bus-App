@@ -175,7 +175,7 @@ export async function getPromisesForAllBusStopsFromLTADataMallAPI(res) {
     let arrayOfBusStops = [];
     let skip = 0;
     const skipBy = 500;
-    const maxParallelRequests = 5; // Adjust as needed
+    const maxParallelRequests = 2; // Adjust as needed
 
     while (true) {
         await Util.delay(100); 
