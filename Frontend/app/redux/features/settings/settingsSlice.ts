@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ISettingsSlice } from "../../../interfaces/ISettingsSlice";
 
-const now = new Date(Date.now());
-
 const initialState: ISettingsSlice = {
     id: null,
     darkMode: false,
-    createdAt: now
+    createdAt: new Date().toISOString()
 }
 
 export const SettingsSlice = createSlice({
@@ -15,7 +13,7 @@ export const SettingsSlice = createSlice({
     reducers: {
         updateSettings: (state, action) => {
             Object.assign(state, action.payload, {
-                updatedAt: now
+                updatedAt: new Date().toISOString()
             });
         },
         removeSettings: (state, action) => {

@@ -1,8 +1,8 @@
 export interface ISettingsSlice {
     id: String | null;
     darkMode: Boolean;
-    createdAt: Date;
-    updatedAt?: Date | null;
+    createdAt: String;
+    updatedAt?: String | null;
 
     // Note: Other items are in IBusStopSlice
 }
