@@ -11,4 +11,8 @@ model BusStopSetting {
     settingSchemaGoingHome   SettingSchema? @relation("SettingsGoingHome", fields: [settingSchemaGoingHomeId], references: [id])
     settingSchemaGoingOutId  String?        @db.ObjectId
     settingSchemaGoingHomeId String?        @db.ObjectId
+
+    @@unique([busStopId, userId])
+
+    userId     String  @db.ObjectId
 }

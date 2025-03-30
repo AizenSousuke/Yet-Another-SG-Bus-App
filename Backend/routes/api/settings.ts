@@ -98,11 +98,12 @@ router.put(
 					settingsSchema: {
 						create: {
 							goingHome: {
-								create: [] // Ensure it matches the expected type
+								create: []
 							},
 							goingOut: {
-								create: [] // Ensure it matches the expected type
-							}
+								create: []
+							},
+							userId: userId
 						}
 					}
 				},
@@ -146,50 +147,71 @@ router.put("/update",
 				return res.status(404).json({ error: "Bus stop not found" });
 			}
 
-			const updatedSettings = await prisma.setting.upsert({
-				where: { userId },
-				create: {
-					userId,
-					settingsSchema: {
-						create: {
-							[GoingOut ? "goingOut" : "goingHome"]: {
-								create: {
-									busStop: {
-										connect: { busStopCode: busStop.busStopCode }
-									}
-								}
-							}
-						}
+			const out = {
+				goingOut: {
+					create: {
+						busStop: {
+							connect: { busStopCode: busStop.busStopCode }
+						},
+						userId: userId
 					}
 				},
-				update: {
-					settingsSchema: {
-						upsert: {
-							create: {
-								[GoingOut ? "goingOut" : "goingHome"]: {
-									create: {
-										busStop: {
-											connect: { busStopCode: busStop.busStopCode }
-										}
-									}
-								}
-							},
-							update: {
-								[GoingOut ? "goingOut" : "goingHome"]: {
-									create: {
-										busStop: {
-											connect: {
-												busStopCode: busStop.busStopCode
-											}
-										},
-									}
-								},
-							},
+				userId: userId
+			};
+
+			const home = {
+				goingHome: {
+					create: {
+						busStop: {
+							connect: { busStopCode: busStop.busStopCode }
+						},
+						userId: userId
+					}
+				},
+				userId: userId
+			};
+
+			var updatedSettings;
+
+			if (GoingOut) {
+				updatedSettings = await prisma.setting.upsert({
+					where: { userId },
+					create: {
+						userId,
+						settingsSchema: {
+							create: out
 						}
 					},
-				},
-				include: { settingsSchema: true },
-			});
+					update: {
+						settingsSchema: {
+							upsert: {
+								create: out,
+								update: out
+							}
+						},
+					},
+					include: { settingsSchema: true },
+				});
+			} else {
+				updatedSettings = await prisma.setting.upsert({
+					where: { userId },
+					create: {
+						userId,
+						settingsSchema: {
+							create: home
+						}
+					},
+					update: {
+						settingsSchema: {
+							upsert: {
+								create: home,
+								update: home
+							}
+						},
+					},
+					include: { settingsSchema: true },
+				});
+			}
 
 			return res.status(200).json({ msg: "Successfully updated code to settings", settings: updatedSettings });
 		} catch (error) {
@@ -312,31 +334,56 @@ router.post("/update/direction/code/tracked",
 			}
 		});
 
-		const updatedSettings = await prisma.setting.update({
+		const busStop = await prisma.busStop.findUnique({
 			where: {
-				userId: userId
-			},
-			data: {
-				settingsSchema: {
-					update: {
-						[camelCaseDirection]: {
-							upsert: {
-								where: {
-									busStop: {
-										code: code
-									}
-								},
-								update: {
-									busServicesIDs: {
-										push: busService.id
+				busStopCode: code
+			}
+		});
+
+		console.log("Updating settings");
+
+		var updatedSettings;
+
+		if (camelCaseDirection == "goingOut") {
+			updatedSettings = await prisma.setting.update({
+				where: {
+					userId: userId
+				},
+				data: {
+					settingsSchema: {
+						update: {
+							goingOut: {
+								upsert: {
+									where: {
+										busStopId_userId: {
+										  busStopId: busStop.id,
+										  userId: userId,
+										},
+									},
+									create: {
+										busServicesIDs: {
+											set: [busService.id]
+										},
+										userId: userId,
+										busStop: {
+											connect: {
+												busStopCode: code,
+											},
+										},
+									},
+									update: {
+										busServicesIDs: {
+											push: busService.id
+										},
+										userId: userId
 									}
 								}
 							}
 						}
 					}
 				}
-			}
-		});
+			});
+		}
 
 		return res
 			.status(200)

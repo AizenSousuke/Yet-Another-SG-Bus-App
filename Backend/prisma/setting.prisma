@@ -13,9 +13,9 @@ model SettingSchema {
     id        String    @id @default(auto()) @map("_id") @db.ObjectId
     goingOut  BusStopSetting[] @relation("SettingsGoingOut")
     goingHome BusStopSetting[] @relation("SettingsGoingHome")
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
 
     settingsId String  @unique @db.ObjectId
     settings   Setting @relation(fields: [settingsId], references: [id])
+
+    userId     String  @db.ObjectId
 }
