@@ -203,4 +203,35 @@ export async function getPromisesForAllBusStopsFromLTADataMallAPI(res) {
     return { arrayOfBusStops, allBusStopsCount: arrayOfBusStops.length };
 }
 
+export async function getPromisesForAllBusServicesFromLTADataMallAPI(res) {
+    let arrayOfBusServices = [];
+    let skip = 0;
+    const skipBy = 500;
+    const maxParallelRequests = 2; // Adjust as needed
+
+    while (true) {
+        await Util.delay(100); 
+
+        const requests = Array.from({ length: maxParallelRequests }, (_, i) =>
+            axios.get("http://datamall2.mytransport.sg/ltaodataservice/BusServices", {
+                headers: header,
+                params: { $skip: skip + i * skipBy }
+            }).catch(error => {
+                console.error(`Error fetching skip=${skip + i * skipBy}:`, error.message);
+                return { data: { value: [] } }; // Prevent breaking the loop
+            })
+        );
+
+        const responses = await Promise.all(requests);
+        const allData = responses.flatMap(res => res.data.value);
+
+        if (allData.length === 0) break;
+
+        arrayOfBusServices.push(...allData);
+        skip += skipBy * maxParallelRequests;
+        console.log(`Fetched ${allData.length} records, Total: ${arrayOfBusServices.length}`);
+    }
+
+    return { arrayOfBusServices, allBusServicesCount: arrayOfBusServices.length };
+}
 

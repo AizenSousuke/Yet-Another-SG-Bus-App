@@ -4,8 +4,9 @@
  * TODO: Use axios to get data from LTA Data Mall and populate the database accordingly
  */
 
+import { BusService } from "@prisma/client";
 import PrismaSingleton from "../classes/PrismaSingleton";
-import { getPromisesForAllBusStopsFromLTADataMallAPI } from "../routes/api/admin";
+import { getPromisesForAllBusServicesFromLTADataMallAPI, getPromisesForAllBusStopsFromLTADataMallAPI } from "../routes/api/admin";
 import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busroutes";
 
 (async () => {
@@ -17,6 +18,7 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
 
     await prisma.$transaction(async transaction => {
         let { arrayOfBusStops } = await getPromisesForAllBusStopsFromLTADataMallAPI(null);
+        let { arrayOfBusServices } = await getPromisesForAllBusServicesFromLTADataMallAPI(null);
         let { arrayOfBusRoutes } = await getPromisesForAllBusRoutesFromLTADataMallAPI(null);
 
         console.log("Transaction started");
@@ -25,6 +27,7 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         console.log("All promises has ran");
 
         await transaction.busStop.deleteMany({});
+        await transaction.busService.deleteMany({});
         await transaction.busRoute.deleteMany({});
 
         // Prepare the data for `createMany`
@@ -49,6 +52,20 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
                 }
             ]
         });
+        
+        const busServicesData = arrayOfBusServices.map((busServices) => ({
+            serviceNo: busServices.ServiceNo,
+            operator: busServices.Operator,
+            direction: busServices.Direction,
+            category: busServices.Category,
+            originCode: busServices.OriginCode,
+            destinationCode: busServices.DestinationCode,
+            am_peak_freq: busServices.AM_Peak_Freq,
+            am_offpeak_freq: busServices.AM_Offpeak_Freq,
+            pm_peak_freq: busServices.PM_Peak_Freq,
+            pm_offpeak_freq: busServices.PM_Offpeak_Freq,
+            loopDesc: busServices.LoopDesc
+        }));
 
         const busRoutesData = arrayOfBusRoutes.map((busRoutes) => ({
             serviceNo: busRoutes.ServiceNo,
@@ -68,6 +85,10 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
         // Use createMany to insert the bus stops in bulk
         await transaction.busStop.createMany({
             data: busStopsData
+        });
+
+        await transaction.busService.createMany({
+            data: busServicesData
         });
 
         await transaction.busRoute.createMany({
