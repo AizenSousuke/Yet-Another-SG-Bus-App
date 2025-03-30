@@ -1,3 +1,4 @@
+import { User } from './../../node_modules/.prisma/client/index.d';
 import express from "express";
 const router = express.Router();
 import authMiddleware from "../../middleware/auth";
@@ -21,8 +22,7 @@ router.get("/", authMiddleware, async (req: any, res) => {
 	try {
 		console.log("Getting auth");
 		console.log("Type of UserId: ", typeof req.user.UserId);
-		// console.log("User: ", await UserModel.findOne({UserId: req.user.UserId}));
-		const user = await prisma.user.findFirst({
+		const user = await prisma.user.findUnique({
 			where: {
 				id: req.user.UserId,
 			}
@@ -183,6 +183,8 @@ router.post(
 			if (!isMatch) {
 				return res.status(400).json({ msg: "Invalid Password" });
 			}
+
+			console.warn("User: " + JSON.stringify(user));
 
 			// Return jsonwebtoken (so user can log in straightaway)
 			const payload = {

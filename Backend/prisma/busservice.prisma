@@ -11,7 +11,4 @@ model BusService {
     pm_peak_freq    String
     pm_offpeak_freq String
     loopDesc        String
-
-    busStopSettingsIDs String[]         @db.ObjectId
-    busStopSettings    BusStopSetting[] @relation(fields: [busStopSettingsIDs], references: [id])
 }

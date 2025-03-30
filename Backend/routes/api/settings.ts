@@ -11,28 +11,28 @@ router.get("/", authMiddleware, async (req: any, res) => {
 	console.log("Request headers: " + JSON.stringify(req.headers));
 	console.log("Request url: " + req.url);
 	console.log("Req user: " + JSON.stringify(req.user));
-	const settings = await prisma.setting.findFirst
-		({
-			where: {
-				userId: req.user.UserId,
-			},
-			include: {
-				settingsSchema: {
-					include: {
-						goingHome: {
-							include: {
-								busStop: true
-							}
-						},
-						goingOut: {
-							include: {
-								busStop: true
-							}
+	console.log("Req user id: " + JSON.stringify(req.user.id));
+	const settings = await prisma.setting.findUnique({
+		where: {
+			userId: req.user.id
+		},
+		include: {
+			settingsSchema: {
+				include: {
+					goingHome: {
+						include: {
+							busStop: true
+						}
+					},
+					goingOut: {
+						include: {
+							busStop: true
 						}
 					}
 				}
 			}
-		});
+		}
+	});
 
 	if (!settings) {
 		console.log("No settings in database");
@@ -124,7 +124,7 @@ router.put(
 			return res.status(500).json({ msg: "Something went wrong." });
 		}
 	}
-)
+);
 
 /**
  * Update settings based on code and Going out prop
@@ -196,7 +196,7 @@ router.put("/update",
 			console.error("Error updating settings:", error);
 			return res.status(500).json({ error: "Failed to update settings" });
 		}
-	})
+	});
 
 /**
  * Remove code from settings depending on GoingOut prop
@@ -239,7 +239,7 @@ router.put("/remove",
 			console.error("Error updating settings:", error);
 			return res.status(500).json({ error: "Failed to update settings" });
 		}
-	})
+	});
 
 /**
  * Delete the entire settings for the user
@@ -271,6 +271,79 @@ router.delete("/delete",
 			console.error("Error deleting settings:", error);
 			return res.status(500).json({ error: "Failed to delete settings" });
 		}
-	})
+	});
+
+/**
+ * Tracks which buses for which bus stop code in the settings
+ */
+router.post("/update/direction/code/tracked",
+	authMiddleware,
+	async (req: any, res) => {
+		const { code, direction, serviceNo } = req.body;
+		const userId = req.user.id;
+		// camelCase the direction
+		const camelCaseDirection = direction.charAt(0).toLowerCase() + direction.slice(1);
+		const settings = await prisma.setting.findUnique({
+			where: {
+				userId: userId
+			},
+			include: {
+				settingsSchema: {
+					include: {
+						[camelCaseDirection]: {
+							include: {
+								busStop: true
+							}
+						}
+					}
+				}
+			}
+		});
+
+		if (!settings) {
+			return res.status(404).json({ msg: "Settings not found" });
+		}
+
+		// TODO: There will be more than one due to different direction, so we need to
+		// check the direction too
+		const busService = await prisma.busService.findFirst({
+			where: {
+				serviceNo: serviceNo
+			}
+		});
+
+		const updatedSettings = await prisma.setting.update({
+			where: {
+				userId: userId
+			},
+			data: {
+				settingsSchema: {
+					update: {
+						[camelCaseDirection]: {
+							upsert: {
+								where: {
+									busStop: {
+										code: code
+									}
+								},
+								update: {
+									busServicesIDs: {
+										push: busService.id
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		});
+
+		return res
+			.status(200)
+			.json({
+				msg: "Successfully updated tracked buses at bus stop",
+				settings: updatedSettings
+			});
+	});
 
 export default router;

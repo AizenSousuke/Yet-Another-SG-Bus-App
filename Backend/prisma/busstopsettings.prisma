@@ -4,9 +4,8 @@ model BusStopSetting {
     busStop   BusStop @relation(fields: [busStopId], references: [id], onDelete: Cascade)
     busStopId String  @db.ObjectId
 
-    busServicesIDs String[]     @db.ObjectId
     // Services saved for the bus stop. If empty, show all bus services.
-    busServices     BusService[] @relation(fields: [busServicesIDs], references: [id])
+    busServicesIDs String[]     @db.ObjectId
 
     settingSchemaGoingOut    SettingSchema? @relation("SettingsGoingOut", fields: [settingSchemaGoingOutId], references: [id])
     settingSchemaGoingHome   SettingSchema? @relation("SettingsGoingHome", fields: [settingSchemaGoingHomeId], references: [id])
