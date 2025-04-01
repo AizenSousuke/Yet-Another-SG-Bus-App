@@ -10,12 +10,12 @@ model Setting {
 }
 
 model SettingSchema {
-    id        String    @id @default(auto()) @map("_id") @db.ObjectId
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    userId String @unique @db.ObjectId
+
     goingOut  BusStopSetting[] @relation("SettingsGoingOut")
     goingHome BusStopSetting[] @relation("SettingsGoingHome")
 
     settingsId String  @unique @db.ObjectId
     settings   Setting @relation(fields: [settingsId], references: [id])
-
-    userId     String  @db.ObjectId
 }

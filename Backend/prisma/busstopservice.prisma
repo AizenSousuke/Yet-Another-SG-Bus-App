@@ -1,0 +1,11 @@
+// Joining table for BusStop and BusService
+model BusStopService {
+    id               String         @id @default(auto()) @map("_id") @db.ObjectId
+    busStopSettingId String         @db.ObjectId
+    busStopSetting   BusStopSetting @relation(fields: [busStopSettingId], references: [id], onDelete: Cascade)
+
+    busServiceId String     @db.ObjectId
+    busService   BusService @relation(fields: [busServiceId], references: [id], onDelete: Cascade)
+
+    @@unique([busStopSettingId, busServiceId])
+}

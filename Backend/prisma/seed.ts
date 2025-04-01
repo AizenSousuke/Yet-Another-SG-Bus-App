@@ -3,8 +3,6 @@
  * 
  * TODO: Use axios to get data from LTA Data Mall and populate the database accordingly
  */
-
-import { BusService } from "@prisma/client";
 import PrismaSingleton from "../classes/PrismaSingleton";
 import { getPromisesForAllBusServicesFromLTADataMallAPI, getPromisesForAllBusStopsFromLTADataMallAPI } from "../routes/api/admin";
 import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busroutes";
@@ -17,12 +15,11 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
     console.log("Starting transaction");
 
     await prisma.$transaction(async transaction => {
+        console.log("Transaction started");
+
         let { arrayOfBusStops } = await getPromisesForAllBusStopsFromLTADataMallAPI(null);
         let { arrayOfBusServices } = await getPromisesForAllBusServicesFromLTADataMallAPI(null);
         let { arrayOfBusRoutes } = await getPromisesForAllBusRoutesFromLTADataMallAPI(null);
-
-        console.log("Transaction started");
-        // const response = await processInBatches(mergedArray, 1);
 
         console.log("All promises has ran");
 
@@ -52,7 +49,7 @@ import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busr
                 }
             ]
         });
-        
+
         const busServicesData = arrayOfBusServices.map((busServices) => ({
             serviceNo: busServices.ServiceNo,
             operator: busServices.Operator,

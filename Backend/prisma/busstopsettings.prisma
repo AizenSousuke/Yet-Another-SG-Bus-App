@@ -1,11 +1,13 @@
 // For saving in settings
 model BusStopSetting {
-    id        String  @id @default(auto()) @map("_id") @db.ObjectId
+    id     String @id @default(auto()) @map("_id") @db.ObjectId
+    userId String @db.ObjectId
+
     busStop   BusStop @relation(fields: [busStopId], references: [id], onDelete: Cascade)
     busStopId String  @db.ObjectId
 
     // Services saved for the bus stop. If empty, show all bus services.
-    busServicesIDs String[]     @db.ObjectId
+    busStopServices BusStopService[]
 
     settingSchemaGoingOut    SettingSchema? @relation("SettingsGoingOut", fields: [settingSchemaGoingOutId], references: [id])
     settingSchemaGoingHome   SettingSchema? @relation("SettingsGoingHome", fields: [settingSchemaGoingHomeId], references: [id])
@@ -13,6 +15,4 @@ model BusStopSetting {
     settingSchemaGoingHomeId String?        @db.ObjectId
 
     @@unique([busStopId, userId])
-
-    userId     String  @db.ObjectId
 }
