@@ -324,9 +324,9 @@ router.delete("/delete",
 	});
 
 /**
- * Tracks which buses for which bus stop code in the settings
+ * Track buses for bus stop
  */
-router.post("/update/direction/code/tracked",
+router.post("/update/direction/code/track",
 	authMiddleware,
 	async (req: any, res) => {
 		const { code, direction, serviceNo } = req.body;
@@ -361,6 +361,22 @@ router.post("/update/direction/code/tracked",
 			}
 		});
 
+		const busStopSetting = await prisma.busStopSetting.findUnique({
+			where: {
+				busStopId_userId: {
+					busStopId: busStop.id,
+					userId: userId
+				}
+			},
+			include: {
+				busStopServices: {
+					include: {
+						busService: true
+					}
+				}
+			}
+		});
+
 		const busRoute = await prisma.busRoute.findFirst({
 			where: {
 				busStopCode: code,
@@ -378,13 +394,13 @@ router.post("/update/direction/code/tracked",
 		const existingBusStopService = await prisma.busStopService.findUnique({
 			where: {
 				busStopSettingId_busServiceId: {
-					busStopSettingId: busStop.id,
+					busStopSettingId: busStopSetting.id,
 					busServiceId: busService.id,
 				},
 			},
 		});
 
-		console.log(existingBusStopService, busStop.id, busService.id);
+		console.log(existingBusStopService, busStopSetting.id, busService.id);
 
 		console.log("Updating settings");
 
@@ -455,4 +471,130 @@ router.post("/update/direction/code/tracked",
 			});
 	});
 
+/**
+ * Untrack buses for bus stop
+ */
+router.post("/update/direction/code/untrack",
+	authMiddleware,
+	async (req: any, res) => {
+		const { code, direction, serviceNo } = req.body;
+		const userId = req.user.id;
+		// camelCase the direction
+		const camelCaseDirection = direction.charAt(0).toLowerCase() + direction.slice(1);
+		console.log("camelCaseDirection:", camelCaseDirection);
+		const settings = await prisma.setting.findUnique({
+			where: {
+				userId: userId
+			},
+			include: {
+				settingsSchema: {
+					include: {
+						[camelCaseDirection]: {
+							include: {
+								busStop: true
+							}
+						}
+					}
+				}
+			}
+		});
+
+		if (!settings) {
+			return res.status(404).json({ msg: "Settings not found" });
+		}
+
+		const busStop = await prisma.busStop.findUnique({
+			where: {
+				busStopCode: code
+			}
+		});
+
+		const busStopSetting = await prisma.busStopSetting.findUnique({
+			where: {
+				busStopId_userId: {
+					busStopId: busStop.id,
+					userId: userId
+				}
+			},
+			include: {
+				busStopServices: {
+					include: {
+						busService: true
+					}
+				}
+			}
+		});
+
+		const busRoute = await prisma.busRoute.findFirst({
+			where: {
+				busStopCode: code,
+				serviceNo: serviceNo
+			}
+		});
+
+		const busService = await prisma.busService.findFirst({
+			where: {
+				serviceNo: serviceNo,
+				direction: busRoute.direction
+			}
+		});
+
+		const existingBusStopService = await prisma.busStopService.findUnique({
+			where: {
+				busStopSettingId_busServiceId: {
+					busStopSettingId: busStopSetting.id,
+					busServiceId: busService.id,
+				},
+			},
+		});
+
+		console.log(existingBusStopService, busStopSetting.id, busService.id);
+
+		console.log("Updating settings");
+
+		var updatedSettings;
+
+		if (!existingBusStopService) {
+			return res.status(404).json({ msg: "Bus service might already have been untracked" });
+		}
+
+		if (camelCaseDirection == "goingOut") {
+			updatedSettings = await prisma.setting.update({
+				where: {
+					userId: userId
+				},
+				data: {
+					settingsSchema: {
+						update: {
+							goingOut: {
+								update: {
+									where: {
+										busStopId_userId: {
+											busStopId: busStop.id,
+											userId: userId,
+										},
+									},
+									data: {
+										busStopServices: {
+											delete: {
+												id: existingBusStopService.id
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+		}
+
+		return res
+			.status(200)
+			.json({
+				msg: "Successfully updated untracked buses at bus stop",
+				settings: updatedSettings
+			});
+
+	});
 export default router;
