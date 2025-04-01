@@ -140,7 +140,7 @@ router.put("/update",
 			// Find the bus stop matching the code
 			const busStop = await prisma.busStop.findUnique({
 				where: { busStopCode: code },
-				select: { busStopCode: true }, // Get only the busStopCode
+				select: { id: true, busStopCode: true }, // Get only the busStopCode
 			});
 
 			if (!busStop) {
@@ -149,23 +149,39 @@ router.put("/update",
 
 			const out = {
 				goingOut: {
-					create: {
-						busStop: {
-							connect: { busStopCode: busStop.busStopCode }
+					connectOrCreate: {
+						where: {
+							busStopId_userId: {
+								busStopId: busStop.id,
+								userId: userId,
+							},
 						},
-						userId: userId
+						create: {
+							busStop: {
+								connect: { busStopCode: busStop.busStopCode }
+							},
+							userId: userId,
+						},
 					}
 				},
-				userId: userId
+				userId: userId,
 			};
 
 			const home = {
 				goingHome: {
-					create: {
-						busStop: {
-							connect: { busStopCode: busStop.busStopCode }
+					connectOrCreate: {
+						where: {
+							busStopId_userId: {
+								busStopId: busStop.id,
+								userId: userId,
+							},
 						},
-						userId: userId
+						create: {
+							busStop: {
+								connect: { busStopCode: busStop.busStopCode }
+							},
+							userId: userId
+						}
 					}
 				},
 				userId: userId
@@ -282,7 +298,19 @@ router.delete("/delete",
 				return res.status(404).json({ msg: "Settings not found" });
 			}
 
-			await prisma.setting.delete({
+			await prisma.busStopSetting.deleteMany({
+				where: {
+					userId: userId
+				}
+			});
+
+			await prisma.settingSchema.deleteMany({
+				where: {
+					userId: userId
+				}
+			});
+
+			await prisma.setting.deleteMany({
 				where: {
 					userId: userId
 				}
@@ -305,6 +333,7 @@ router.post("/update/direction/code/tracked",
 		const userId = req.user.id;
 		// camelCase the direction
 		const camelCaseDirection = direction.charAt(0).toLowerCase() + direction.slice(1);
+		console.log("camelCaseDirection:", camelCaseDirection);
 		const settings = await prisma.setting.findUnique({
 			where: {
 				userId: userId
@@ -346,6 +375,17 @@ router.post("/update/direction/code/tracked",
 			}
 		});
 
+		const existingBusStopService = await prisma.busStopService.findUnique({
+			where: {
+				busStopSettingId_busServiceId: {
+					busStopSettingId: busStop.id,
+					busServiceId: busService.id,
+				},
+			},
+		});
+
+		console.log(existingBusStopService, busStop.id, busService.id);
+
 		console.log("Updating settings");
 
 		var updatedSettings;
@@ -367,44 +407,35 @@ router.post("/update/direction/code/tracked",
 										},
 									},
 									create: {
-										busStopServices: {
-											connectOrCreate: {
-												where: {
-													busStopSettingId_busServiceId: {
-														busStopSettingId: busStop.id,
-														busServiceId: busService.id,
-													},
-												},
-												create: {
-													busService: {
-														connect: {
-															id: busService.id
-														}
-													}
-												}
-											}
-										},
 										userId: userId,
 										busStop: {
 											connect: {
 												busStopCode: code,
 											},
 										},
+										busStopServices: {
+											create: {
+												busService: {
+													connect: {
+														id: busService.id
+													}
+												}
+											}
+										},
 									},
 									update: {
 										busStopServices: {
-											connectOrCreate: {
-												where: {
-													busStopSettingId_busServiceId: {
-														busStopSettingId: busStop.id,
-														busServiceId: busService.id,
+											...(existingBusStopService
+												? { connect: { id: existingBusStopService.id } } // Avoid duplicate
+												: {
+													create: {
+														busService: { connect: { id: busService.id } },
 													},
-												},
-												create: {
-													busService: {
-														connect: { id: busService.id },
-													},
-												},
+												}),
+										},
+										busStop: {
+											connect: {
+												busStopCode: code,
 											},
 										},
 									}
