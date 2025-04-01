@@ -326,17 +326,23 @@ router.post("/update/direction/code/tracked",
 			return res.status(404).json({ msg: "Settings not found" });
 		}
 
-		// TODO: There will be more than one due to different direction, so we need to
-		// check the direction too
-		const busService = await prisma.busService.findFirst({
+		const busStop = await prisma.busStop.findUnique({
 			where: {
+				busStopCode: code
+			}
+		});
+
+		const busRoute = await prisma.busRoute.findFirst({
+			where: {
+				busStopCode: code,
 				serviceNo: serviceNo
 			}
 		});
 
-		const busStop = await prisma.busStop.findUnique({
+		const busService = await prisma.busService.findFirst({
 			where: {
-				busStopCode: code
+				serviceNo: serviceNo,
+				direction: busRoute.direction
 			}
 		});
 
@@ -356,13 +362,27 @@ router.post("/update/direction/code/tracked",
 								upsert: {
 									where: {
 										busStopId_userId: {
-										  busStopId: busStop.id,
-										  userId: userId,
+											busStopId: busStop.id,
+											userId: userId,
 										},
 									},
 									create: {
-										busServicesIDs: {
-											set: [busService.id]
+										busStopServices: {
+											connectOrCreate: {
+												where: {
+													busStopSettingId_busServiceId: {
+														busStopSettingId: busStop.id,
+														busServiceId: busService.id,
+													},
+												},
+												create: {
+													busService: {
+														connect: {
+															id: busService.id
+														}
+													}
+												}
+											}
 										},
 										userId: userId,
 										busStop: {
@@ -372,10 +392,21 @@ router.post("/update/direction/code/tracked",
 										},
 									},
 									update: {
-										busServicesIDs: {
-											push: busService.id
+										busStopServices: {
+											connectOrCreate: {
+												where: {
+													busStopSettingId_busServiceId: {
+														busStopSettingId: busStop.id,
+														busServiceId: busService.id,
+													},
+												},
+												create: {
+													busService: {
+														connect: { id: busService.id },
+													},
+												},
+											},
 										},
-										userId: userId
 									}
 								}
 							}
