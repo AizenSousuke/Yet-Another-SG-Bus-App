@@ -11,4 +11,6 @@ model BusService {
     pm_peak_freq    String
     pm_offpeak_freq String
     loopDesc        String
+
+    BusStopService BusStopService[]
 }
