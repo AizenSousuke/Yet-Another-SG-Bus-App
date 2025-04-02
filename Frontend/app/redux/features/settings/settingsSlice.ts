@@ -1,11 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ISettingsSlice } from "../../../interfaces/ISettingsSlice";
+import { ISetting } from "../../../interfaces/ISetting";
 
-const initialState: ISettingsSlice = {
-    id: null,
+const initialState: ISetting = {
     darkMode: false,
     createdAt: new Date().toISOString()
-}
+};
 
 export const SettingsSlice = createSlice({
     initialState: initialState,
