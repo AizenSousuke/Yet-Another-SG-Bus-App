@@ -21,12 +21,22 @@ router.get("/", authMiddleware, async (req: any, res) => {
 				include: {
 					goingHome: {
 						include: {
-							busStop: true
+							busStop: true,
+							busStopServices: {
+								include: {
+									busService: true
+								}
+							}
 						}
 					},
 					goingOut: {
 						include: {
-							busStop: true
+							busStop: true,
+							busStopServices: {
+								include: {
+									busService: true
+								}
+							}
 						}
 					}
 				}
@@ -377,6 +387,12 @@ router.post("/update/direction/code/track",
 			}
 		});
 
+		console.log("Bus stop setting: ", busStopSetting);
+
+		if (!busStopSetting) {
+			return res.status(404).json({ msg: "Bus stop setting not found. Please add the bus stop first." });
+		}
+
 		const busRoute = await prisma.busRoute.findFirst({
 			where: {
 				busStopCode: code,
@@ -400,7 +416,7 @@ router.post("/update/direction/code/track",
 			},
 		});
 
-		console.log(existingBusStopService, busStopSetting.id, busService.id);
+		console.log("Existing bus stop service: ", existingBusStopService, busStopSetting.id, busService.id);
 
 		console.log("Updating settings");
 
@@ -524,6 +540,12 @@ router.post("/update/direction/code/untrack",
 				}
 			}
 		});
+
+		console.log("Bus stop setting: ", busStopSetting);
+
+		if (!busStopSetting) {
+			return res.status(404).json({ msg: "Bus stop setting not found. Please add the bus stop first." });
+		}
 
 		const busRoute = await prisma.busRoute.findFirst({
 			where: {
