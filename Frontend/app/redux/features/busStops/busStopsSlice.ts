@@ -66,21 +66,14 @@ export const BusStopsSlice = createSlice({
                     busStopServices: []
                 };
                 state[currentDirection].push(busStop);
-            }
-
-            if (busNumber) {
-                state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.push({
-                    busService: {
-                        serviceNo: busNumber
-                    }
-                });
+                console.log("State after removeBusStopBus init: " + JSON.stringify(state[currentDirection]));
             }
 
             if (busNumber) {
                 state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.filter(src => src.busService.serviceNo != busNumber);
             } else {
                 // Delete the whole busStop
-                state[currentDirection].filter(src => src.busStop.busStopCode != busStopCode);
+                state[currentDirection] = state[currentDirection].filter(src => src.busStop.busStopCode != busStopCode);
             }
         },
         emptyBusStop: (state, action) => {
