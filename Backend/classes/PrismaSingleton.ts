@@ -10,6 +10,12 @@ export default class PrismaSingleton {
             PrismaSingleton.prisma = new PrismaClient({
                 // Log all database queries
                 log: ["info", "warn", "error"],
+                // Doesn't work for some reason even with omitApi
+                // omit: {
+                //     user: {
+                //         password: true
+                //     },
+                // }
             });
         }
 
