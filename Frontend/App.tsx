@@ -162,7 +162,7 @@ const App = () => {
 					if (settings) {
 						const goingHome: IBusStopSetting[] = settings.goingHome;
 						const goingOut: IBusStopSetting[] = settings.goingOut;
-						console.warn(
+						console.log(
 							"Going home: ",
 							JSON.stringify(goingHome),
 							"Going out: ",
