@@ -10,7 +10,7 @@ import { SettingsProvider } from "./app/context/SettingsContext";
 import LocationModal from "./app/screens/LocationModal";
 import Search from "./app/screens/Search";
 import Constants from "expo-constants";
-import { store } from "./app/redux/store";
+import { RootState, store } from "./app/redux/store";
 import {
 	loggedIn,
 	setToken,
@@ -21,15 +21,17 @@ import {
 } from "./app/redux/features/busStops/busStopsSlice";
 import { Direction } from "./app/classes/Enums";
 import { useSelector } from "react-redux";
+import { ISettingsSchema } from "./app/interfaces/ISetting";
+import { IBusStopSetting } from "./app/interfaces/IBusStopSetting";
 
 const Stack = createStackNavigator();
 
 const App = () => {
 	// State is coming from Redux store
 	// Accesses state.home.token, which means your Redux store has a home slice that contains token.
-	let authToken = useSelector((state) => state.home.token);
-	let goingOut = useSelector((state) => state.busStop.goingOut);
-	let goingHome = useSelector((state) => state.busStop.goingHome);
+	let authToken = useSelector((state: RootState) => state.home.token);
+	let goingOut = useSelector((state: RootState) => state.busStop.goingOut);
+	let goingHome = useSelector((state: RootState) => state.busStop.goingHome);
 
 	useEffect(() => {
 		console.log(
@@ -156,15 +158,15 @@ const App = () => {
 					console.log(
 						"Settings res in _getData: " + JSON.stringify(res)
 					);
-					var settings = res.settings?.settingsSchema;
+					var settings: ISettingsSchema | null = res.settings?.settingsSchema;
 					if (settings) {
-						const goingHome: Array<string> = settings.goingHome;
-						const goingOut: Array<string> = settings.goingOut;
-						console.log(
+						const goingHome: IBusStopSetting[] = settings.goingHome;
+						const goingOut: IBusStopSetting[] = settings.goingOut;
+						console.warn(
 							"Going home: ",
-							goingHome,
+							JSON.stringify(goingHome),
 							"Going out: ",
-							goingOut
+							JSON.stringify(goingOut)
 						);
 						goingOut.forEach((busStop) => {
 							store.dispatch(

@@ -3,7 +3,7 @@ import api from "../../../api/api";
 import { ToastAndroid } from "react-native";
 import { Direction } from "../../../classes/Enums";
 import { ISettingsSchema } from "../../../interfaces/ISetting";
-import { IBusStopSetting } from "../../../interfaces/IBusStopSetting";
+import { IBusStop, IBusStopSetting } from "../../../interfaces/IBusStopSetting";
 
 const initialState: ISettingsSchema = {
     goingOut: [],
@@ -32,22 +32,24 @@ export const BusStopsSlice = createSlice({
             let busStop: IBusStopSetting | undefined = state[currentDirection].find(src => src.busStop.busStopCode == busStopCode);
 
             if (!busStop) {
-                busStop = {
+                const newBusStop: IBusStopSetting = {
                     busStop: {
                         busStopCode: busStopCode,
                     },
                     busStopServices: []
                 };
-                state[currentDirection].push(busStop);
+
+                console.log("New busStop:", JSON.stringify(busStop, null, 2));
+                state[currentDirection].push(newBusStop);
             }
 
-            if (busNumber) {
-                state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.push({
-                    busService: {
-                        serviceNo: busNumber
-                    }
-                });
-            }
+            // if (busNumber) {
+            //     state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.push({
+            //         busService: {
+            //             serviceNo: busNumber
+            //         }
+            //     });
+            // }
 
             console.log("State after addBusStopBus: " + JSON.stringify(state[currentDirection]));
         },
