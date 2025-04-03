@@ -8,7 +8,6 @@ export interface IBusStop {
 }
 
 export interface IBusStopService {
-    busServiceId: string;
     busService: IBusService;
 }
 

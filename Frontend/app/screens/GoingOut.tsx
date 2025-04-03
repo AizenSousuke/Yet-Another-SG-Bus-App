@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const GoingOut = (props: any) => {
 	const isLoading = useSelector(state => state.home.isLoading);
-	const goingOut = useSelector(state => state.busStop.GoingOut);
+	const goingOut = useSelector(state => state.busStop.goingOut);
 	return (
 		<ScrollView
 			refreshControl={
@@ -20,7 +20,7 @@ const GoingOut = (props: any) => {
 			}
 		>
 			{Object.keys(goingOut).map((key, index) => {
-				// const savedBusStopBuses: ISavedBusStopBuses = storeState.busStop.GoingOut[Number(key)];
+				// const savedBusStopBuses: ISavedBusStopBuses = storeState.busStop.goingOut[Number(key)];
 				return (
 					<BusStopSaved
 						key={index}

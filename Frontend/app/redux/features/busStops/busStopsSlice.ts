@@ -43,7 +43,6 @@ export const BusStopsSlice = createSlice({
 
             if (busNumber) {
                 state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.push({
-                    busServiceId: busServiceId,
                     busService: {
                         serviceNo: busNumber
                     }
@@ -55,40 +54,56 @@ export const BusStopsSlice = createSlice({
         removeBusStopBus: (state, action) => {
             const { direction, busStopCode, busNumber }: { direction: Direction, busStopCode: string, busNumber: string; } = action.payload;
 
-            const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
+            const currentDirection = direction == Direction.GoingOut ? "goingOut" : "goingHome";
 
-            let busStop: ISavedBusStopBuses = state[currentDirection][busStopCode];
+            let busStop: IBusStopSetting | undefined = state[currentDirection].find(src => src.busStop.busStopCode == busStopCode);
+
             if (!busStop) {
-                state[currentDirection][busStopCode] = { BusesTracked: {} };
+                busStop = {
+                    busStop: {
+                        busStopCode: busStopCode,
+                    },
+                    busStopServices: []
+                };
+                state[currentDirection].push(busStop);
             }
 
             if (busNumber) {
-                delete busStop.BusesTracked[busNumber];
+                state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.push({
+                    busService: {
+                        serviceNo: busNumber
+                    }
+                });
+            }
+
+            if (busNumber) {
+                state[currentDirection].find(src => src.busStop.busStopCode == busStopCode)?.busStopServices.filter(src => src.busService.serviceNo != busNumber);
             } else {
                 // Delete the whole busStop
-                delete state[currentDirection][busStopCode];
+                state[currentDirection].filter(src => src.busStop.busStopCode != busStopCode);
             }
         },
         emptyBusStop: (state, action) => {
             const { direction } = action.payload;
 
-            const currentDirection = direction == Direction.GoingOut ? "GoingOut" : "GoingHome";
+            const currentDirection = direction == Direction.GoingOut ? "goingOut" : "goingHome";
 
-            state[currentDirection] = {};
+            // Resets the bus stops at the given direction
+            state[currentDirection] = [];
         },
         goingOut: (state, action) => {
-            state.GoingOut = action.payload;
+            state.goingOut = action.payload;
         },
         goingHome: (state, action) => {
-            state.GoingHome = action.payload;
+            state.goingHome = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder.addCase(getSettings.pending, (state, action) => {
         });
         builder.addCase(getSettings.fulfilled, (state, action) => {
-            state.GoingOut = action.payload.settings?.Settings?.GoingOut;
-            state.GoingHome = action.payload.settings?.Settings?.GoingHome;
+            state.goingOut = action.payload.settings?.Settings?.GoingOut;
+            state.goingHome = action.payload.settings?.Settings?.GoingHome;
             ToastAndroid.show("Successfully get settings", ToastAndroid.SHORT);
         });
         builder.addCase(getSettings.rejected, (state, action) => {
