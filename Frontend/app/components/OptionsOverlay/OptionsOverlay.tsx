@@ -53,6 +53,17 @@ const OptionsOverlay = ({
 														setOverlayVisible(
 															!overlayVisible
 														);
+													}}
+												>
+													<ListItem.Subtitle>
+														Track Buses
+													</ListItem.Subtitle>
+												</ListItem>
+												<ListItem
+													onPress={async () => {
+														setOverlayVisible(
+															!overlayVisible
+														);
 
 														store.dispatch(
 															removeBusStopBus({
