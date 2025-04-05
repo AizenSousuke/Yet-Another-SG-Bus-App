@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Text, ToastAndroid, View } from "react-native";
+import { Text, View } from "react-native";
 import Collapsible from "react-native-collapsible";
 import { Icon, ListItem, Overlay } from "react-native-elements";
 import {
 	GetBusStop,
 	GetBusStopByCode,
-	RemoveCodeFromSettings,
 } from "../api/api";
 import { Pressable } from "react-native";
 import BusStop from "./BusStop";
-import AuthConsumer from "../context/AuthContext";
 import AppStyles from "../../assets/css/AppStyles";
 import ColourScheme from "../settings/colourScheme.json";
-import { store } from "../redux/store";
-import { removeBusStopBus } from "../redux/features/busStops/busStopsSlice";
-import { Direction } from "../classes/Enums";
 import OptionsOverlay from "./OptionsOverlay";
 
 /**
@@ -26,6 +21,7 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 	const [isCollapsed, setIsCollapsed] = useState(true);
 	const [arrow, setArrow] = useState(false);
 	const [overlayVisible, setOverlayVisible] = useState(false);
+	const [trackingVisible, setTrackingVisible] = useState(false);
 
 	useEffect(() => {
 		console.log("Getting data for " + code);
@@ -78,10 +74,26 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 						</Text>
 					</ListItem.Subtitle>
 				</ListItem.Content>
+				{trackingVisible ? (
+					<Pressable android_ripple={{ borderless: true }}>
+						<Overlay
+							isVisible={trackingVisible}
+							onBackdropPress={() => setTrackingVisible(false)}
+							animationType="fade"
+						>
+							<View>
+								<Text>Tracking</Text>
+							</View>
+						</Overlay>
+					</Pressable>
+				) : (
+					<></>
+				)}
 				{isCollapsed ? (
 					<OptionsOverlay
 						overlayVisible={overlayVisible}
 						setOverlayVisible={setOverlayVisible}
+						setTrackingVisible={setTrackingVisible}
 						GoingOut={GoingOut}
 						code={code}
 					/>

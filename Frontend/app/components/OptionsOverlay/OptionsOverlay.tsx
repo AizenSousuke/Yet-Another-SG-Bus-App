@@ -12,6 +12,7 @@ interface IOptionsOverlay {
 	GoingOut: boolean;
 	overlayVisible: any;
 	setOverlayVisible: any;
+	setTrackingVisible: any;
 	code: string;
 }
 
@@ -19,6 +20,7 @@ const OptionsOverlay = ({
 	GoingOut,
 	overlayVisible,
 	setOverlayVisible,
+	setTrackingVisible,
 	code,
 }: IOptionsOverlay) => {
 	useEffect(() => {
@@ -35,6 +37,7 @@ const OptionsOverlay = ({
 				<Overlay
 					isVisible={overlayVisible}
 					onBackdropPress={() => setOverlayVisible(!overlayVisible)}
+					animationType="fade"
 				>
 					<AuthConsumer>
 						{(auth: any) => {
@@ -52,6 +55,9 @@ const OptionsOverlay = ({
 													onPress={async () => {
 														setOverlayVisible(
 															!overlayVisible
+														);
+														setTrackingVisible(
+															true
 														);
 													}}
 												>
