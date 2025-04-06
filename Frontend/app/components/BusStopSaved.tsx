@@ -2,15 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import Collapsible from "react-native-collapsible";
 import { Icon, ListItem, Overlay } from "react-native-elements";
-import {
-	GetBusStop,
-	GetBusStopByCode,
-} from "../api/api";
+import { GetBusStop, GetBusStopByCode } from "../api/api";
 import { Pressable } from "react-native";
 import BusStop from "./BusStop";
 import AppStyles from "../../assets/css/AppStyles";
 import ColourScheme from "../settings/colourScheme.json";
 import OptionsOverlay from "./OptionsOverlay";
+import TrackingOverlay from "./TrackingOverlay/TrackingOverlay";
 
 /**
  * Component that is used for Home\Going out page
@@ -75,17 +73,10 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 					</ListItem.Subtitle>
 				</ListItem.Content>
 				{trackingVisible ? (
-					<Pressable android_ripple={{ borderless: true }}>
-						<Overlay
-							isVisible={trackingVisible}
-							onBackdropPress={() => setTrackingVisible(false)}
-							animationType="fade"
-						>
-							<View>
-								<Text>Tracking</Text>
-							</View>
-						</Overlay>
-					</Pressable>
+					<TrackingOverlay
+						trackingVisible={trackingVisible}
+						setTrackingVisible={setTrackingVisible}
+					/>
 				) : (
 					<></>
 				)}
