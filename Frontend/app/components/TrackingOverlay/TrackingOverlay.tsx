@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Pressable, View, Text } from "react-native";
-import { Overlay } from "react-native-elements";
+import { Card, Overlay } from "react-native-elements";
+import AppStyles from "../../../assets/css/AppStyles";
 
 interface ITrackingOverlay {
 	trackingVisible: boolean;
@@ -12,7 +13,7 @@ const TrackingOverlay = ({
 	setTrackingVisible,
 }: ITrackingOverlay) => {
 	useEffect(() => {
-		console.log(`TrackingOverlay mounted`);
+		// console.log(`TrackingOverlay mounted`);
 	}, []);
 
 	return (
@@ -22,9 +23,13 @@ const TrackingOverlay = ({
 				onBackdropPress={() => setTrackingVisible(false)}
 				animationType="fade"
 			>
-				<View>
-					<Text>Tracking</Text>
-				</View>
+				<Card containerStyle={{ margin: 0 }}>
+					<Card.Title>Tracking</Card.Title>
+					<Card.Divider />
+					<Card.FeaturedSubtitle>
+						Tracking buses:
+					</Card.FeaturedSubtitle>
+				</Card>
 			</Overlay>
 		</Pressable>
 	);
