@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Pressable, View, Text } from "react-native";
 import { Card, Overlay } from "react-native-elements";
 import AppStyles from "../../../assets/css/AppStyles";
+import TrackingBusDetails from "../TrackingBusDetails";
 
 interface ITrackingOverlay {
 	trackingVisible: boolean;
@@ -26,9 +27,13 @@ const TrackingOverlay = ({
 				<Card containerStyle={{ margin: 0 }}>
 					<Card.Title>Tracking</Card.Title>
 					<Card.Divider />
-					<Card.FeaturedSubtitle>
-						Tracking buses:
-					</Card.FeaturedSubtitle>
+					<Text>Tracking buses:</Text>
+					<View style={{ display: "flex", flexDirection: "column" }}>
+						<TrackingBusDetails />
+						<TrackingBusDetails />
+						<TrackingBusDetails />
+						<TrackingBusDetails />
+					</View>
 				</Card>
 			</Overlay>
 		</Pressable>
