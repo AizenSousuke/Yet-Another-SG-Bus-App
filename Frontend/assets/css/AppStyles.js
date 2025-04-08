@@ -62,6 +62,13 @@ export default StyleSheet.create({
 		// Add platform specific code
 		paddingTop: Platform.OS === "android" ? StatusBar.height : 0,
 	},
+	headerStyle: {
+		alignSelf: "center",
+		textAlign: "center",
+		color: "white",
+		fontWeight: "bold",
+		fontSize: 20,
+	},
 	headerText: {
 		fontSize: Platform.OS === "android" ? 25 : 30,
 		fontWeight: "bold",

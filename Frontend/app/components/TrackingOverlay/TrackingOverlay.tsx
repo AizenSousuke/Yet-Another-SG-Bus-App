@@ -1,8 +1,10 @@
 import { useEffect } from "react";
-import { Pressable, View, Text } from "react-native";
-import { Card, Overlay } from "react-native-elements";
+import { Pressable, View, Text, SafeAreaView } from "react-native";
+import { Card, Header, Overlay } from "react-native-elements";
 import AppStyles from "../../../assets/css/AppStyles";
 import TrackingBusDetails from "../TrackingBusDetails";
+import ColourScheme from "../../settings/colourScheme.json";
+import { ScrollView } from "react-native-gesture-handler";
 
 interface ITrackingOverlay {
 	trackingVisible: boolean;
@@ -24,17 +26,45 @@ const TrackingOverlay = ({
 				onBackdropPress={() => setTrackingVisible(false)}
 				animationType="fade"
 			>
-				<Card containerStyle={{ margin: 0 }}>
-					<Card.Title>Tracking</Card.Title>
-					<Card.Divider />
-					<Text>Tracking buses:</Text>
-					<View style={{ display: "flex", flexDirection: "column" }}>
-						<TrackingBusDetails />
-						<TrackingBusDetails />
-						<TrackingBusDetails />
-						<TrackingBusDetails />
-					</View>
-				</Card>
+				<SafeAreaView
+					style={{ display: "flex", flex: 0.5, maxWidth: "80%" }}
+				>
+					<Header
+						centerComponent={
+							<Text style={AppStyles.headerStyle}>Tracking</Text>
+						}
+						backgroundColor={ColourScheme.header}
+					/>
+					<Card containerStyle={{ margin: 0 }}>
+						<Card.Title>Tracking Buses:</Card.Title>
+						<Card.Divider />
+						<View style={{}}>
+							<ScrollView>
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+								<TrackingBusDetails />
+							</ScrollView>
+						</View>
+					</Card>
+				</SafeAreaView>
 			</Overlay>
 		</Pressable>
 	);
