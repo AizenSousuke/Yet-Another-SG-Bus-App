@@ -5,6 +5,7 @@ import ColorScheme from "../../settings/colourScheme.json";
 
 interface ITrackingBusDetails {
 	isTracked: boolean;
+	busService: string;
 }
 
 const TrackingBusDetails = ({ isTracked = true }: ITrackingBusDetails) => {

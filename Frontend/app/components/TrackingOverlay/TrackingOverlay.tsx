@@ -9,11 +9,18 @@ import { ScrollView } from "react-native-gesture-handler";
 interface ITrackingOverlay {
 	trackingVisible: boolean;
 	setTrackingVisible: Function;
+	busDetailsData: ITrackingBusDetailsData[];
+}
+
+interface ITrackingBusDetailsData {
+	busService: string;
+	isTracked: boolean;
 }
 
 const TrackingOverlay = ({
 	trackingVisible,
 	setTrackingVisible,
+	busDetailsData = [],
 }: ITrackingOverlay) => {
 	useEffect(() => {
 		// console.log(`TrackingOverlay mounted`);
@@ -40,27 +47,21 @@ const TrackingOverlay = ({
 						<Card.Divider />
 						<View style={{}}>
 							<ScrollView>
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
-								<TrackingBusDetails />
+								{busDetailsData.length > 0 ? (
+									busDetailsData.map((data, index) => {
+										return (
+											<TrackingBusDetails
+												key={index}
+												busService={data.busService}
+												isTracked={data.isTracked}
+											/>
+										);
+									})
+								) : (
+									<Text style={AppStyles.noData}>
+										No Bus Services
+									</Text>
+								)}
 							</ScrollView>
 						</View>
 					</Card>
