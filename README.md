@@ -94,23 +94,30 @@ Note: Optional. This is only for quickly opening the Emulator.
 cd /d C:\Users\%username%\AppData\Local\Android\sdk\emulator
 emulator @Pixel_4_API_30
 ```
-</defails>
+</details>
 
 ### Note
 Ensure that the android emulator with expo installed is running already.
 Open up terminal in the application's root directory and run the following commands:
 
-## Frontend
+## Install all dependencies
 ```
-yarn frontend
+yarn install
 ```
 
-## Backend
+// TODO: 
+## Set up the database
+<details>
+
+</details>
+
+## Run Backend
 ```
 yarn backend
 ```
 
-## NOTE: Build and install development build first in the Frontend folder
+## Run Frontend
+### NOTE: Build and install development build first in the Frontend folder
 ```
 // Build
 npx react-native build-android
@@ -143,6 +150,11 @@ yarn start
 ```
 npx expo run:ios
 ```
+
+```
+yarn frontend
+```
+
 ---
 
 ## Testing
