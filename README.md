@@ -117,7 +117,11 @@ yarn backend
 ```
 
 ## Run Frontend
-### NOTE: Build and install development build first in the Frontend folder
+### NOTE: Build and install development build first from the Frontend folder. Note that you also need an emulator running for the following command.
+```
+yarn build-development
+```
+or manually with the following command:
 ```
 // Build
 npx react-native build-android
@@ -135,24 +139,14 @@ or
 
 yarn start
 ```
-
-## To start in Android simulator
+or this command from the root folder
 ```
-# In frontend folder run the following command:
-adb reverse tcp:8080 tcp:8080 && expo start --dev-client
-
-or 
-
-yarn start
+yarn frontend
 ```
 
 ## To start in IOS simulator
 ```
 npx expo run:ios
-```
-
-```
-yarn frontend
 ```
 
 ---
