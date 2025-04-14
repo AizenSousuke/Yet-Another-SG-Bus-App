@@ -30,31 +30,11 @@ By using this application you agree to not hold us responsible for your bus not 
 
 ## Running the App
 
-Config files to create in the following folders:
+Config files to be created in the following folders:
 
-Backend\db.js
-```
-const mongoose = require("mongoose");
-const config = require("config");
-const db = config.get("mongoURI");
+<details>
 
-const connectDB = async () => {
-	try {
-		await mongoose.connect(db);
-		console.log("MongoDB Connected...");
-	} catch (err) {
-		console.error(err.message);
-		// Exit process with failure
-		process.exit(1);
-	}
-};
-
-module.exports = connectDB;
-
-```
-~~\config\default.json <-- This file is for heroku to make sure that the application does not error out. It doesn't do anything as you get the settings from process.env.xxx in heroku config.
-Backend\config\default.json~~
-<strike>
+### Backend\config\default.json
 ```
 {
     "mongoURI" : "mongodb+srv://username:password@database01cluster.pqete.mongodb.net/database?retryWrites=true&w=majority",
@@ -63,20 +43,19 @@ Backend\config\default.json~~
     "FACEBOOK_APP_ID" : "",
     "FACEBOOK_APP_SECRET" : "",
     "FACEBOOK_CALLBACK_URL" : "http://localhost:8080/api/auth/facebook/callback",
-    "FRONTEND_LINK" : "exp://<LOCAL_IP>:19000",
+    "FRONTEND_LINK" : "exp+yasgba://<LOCAL_IP>:19000",
     "TOKEN_EXPIRY_DAYS" : 1,
     "MAX_DISTANCE_IN_METRES": 300
 }
 ```
-</strike>
 
-Backend\config\test.json
+### Backend\config\test.json
 Note: This is for running yarn test
 ```
 {}
 ```
 
-Frontend\app.config.json
+### Frontend\app.config.json
 ```
 module.exports = () => {
 	const config = {
@@ -109,29 +88,13 @@ module.exports = () => {
 	}
 };
 ```
-Frontend\config\Emulator.bat
+### Frontend\config\Emulator.bat
+Note: Optional. This is only for quickly opening the Emulator.
 ```
 cd /d C:\Users\%username%\AppData\Local\Android\sdk\emulator
 emulator @Pixel_4_API_30
 ```
-
-<details>
-<summary>Obsolete Step</summary>
-
-Frontend\config\default.json
-```
-{
-    "TOKEN": "TOKEN",
-    "BACKEND_API": "http://10.0.2.2:8080/api",
-    "MAPBOX": "<MAPBOX_API_KEY>",
-    "MAX_DISTANCE_IN_METRES": 300
-}
-```
-Frontend\config\test.json
-```
-{}
-```
-</details>
+</defails>
 
 ### Note
 Ensure that the android emulator with expo installed is running already.
