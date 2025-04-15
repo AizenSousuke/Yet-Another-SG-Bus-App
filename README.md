@@ -109,6 +109,29 @@ yarn install
 ## Set up the database
 <details>
 
+### Get your own LTA DataMall API
+https://datamall.lta.gov.sg/content/datamall/en/request-for-api.html
+
+### Create a mongodb docker container with a replica set
+```
+docker run -p 27017:27017 --name mongodb -d mongodb/mongodb-community-server:latest --replSet replicaSet
+```
+
+### Install mongosh tool
+https://www.mongodb.com/docs/mongodb-shell/install/
+
+### Run the migration script from the backend folder
+```
+yarn generate && 
+yarn db &&
+yarn seed
+```
+
+### Go into mongosh and run some additional commands
+```
+db.BusStop.createIndex({ location: "2dsphere" });
+```
+
 </details>
 
 ## Run Backend
