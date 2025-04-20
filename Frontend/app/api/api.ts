@@ -287,7 +287,7 @@ export const LogOut = async () => {
 };
 
 export const CheckTokenExpiry = async (token: string | null) => {
-	console.log("Checking token expiry:" + token);
+	console.log("CheckTokenExpiry - Checking token expiry: " + token);
 	data.headers["X-Auth-Token"] = token;
 	if (!token) {
 		console.warn("Default token has expired");

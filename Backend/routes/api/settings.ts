@@ -341,7 +341,7 @@ router.delete("/delete",
 router.get("/busStop/details/:direction/:code",
 	authMiddleware,
 	async (req: any, res) => {
-		console.log("Getting bus stop details from settings");
+		console.warn("Getting bus stop details from settings");
 		const userId = req.user.id;
 		const { direction, code } = req.params;
 		console.log("Bus stop details: " + userId, direction, code);
@@ -376,6 +376,16 @@ router.get("/busStop/details/:direction/:code",
 				}
 			}
 		});
+
+		console.log(details);
+
+		if (details == null) {
+			console.log("Details is null. All busses shown.");
+			return res.json({
+				msg: "All buses shown",
+				data: []
+			});
+		}
 
 		if (direction == Direction.GoingHome) {
 			// details.settingsSchema.goingHome.(src => src.)
