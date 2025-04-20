@@ -76,7 +76,7 @@ const BusInformation = ({
 				flexGrow: 1,
 				display: "flex",
 				width: "80%",
-				maxHeight: "90%",
+				maxHeight: "90%"
 			}}
 		>
 			<Header
@@ -99,7 +99,7 @@ const BusInformation = ({
 					updatePageData(index);
 				}}
 			/>
-			<Card containerStyle={{ flexGrow: 1, maxHeight: "90%", marginTop: 0 }}>
+			<Card containerStyle={{ flexGrow: 1, maxHeight: "95%", margin: 0 }}>
 				<FlatList
 					contentContainerStyle={{
 						paddingBottom: 0,
