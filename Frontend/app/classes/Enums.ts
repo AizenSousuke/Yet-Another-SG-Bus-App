@@ -1,4 +1,4 @@
 export enum Direction {
-    GoingOut,
-    GoingHome
+    GoingOut = "GoingOut",
+    GoingHome = "GoingHome"
 }

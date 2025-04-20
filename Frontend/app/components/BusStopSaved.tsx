@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Text, View } from "react-native";
 import Collapsible from "react-native-collapsible";
-import { Icon, ListItem, Overlay } from "react-native-elements";
-import { GetBusStop, GetBusStopByCode } from "../api/api";
+import { Icon, ListItem } from "react-native-elements";
+import { GetBusStop, GetBusStopByCode, GetBusStopDetails } from "../api/api";
 import { Pressable } from "react-native";
 import BusStop from "./BusStop";
 import AppStyles from "../../assets/css/AppStyles";
 import ColourScheme from "../settings/colourScheme.json";
 import OptionsOverlay from "./OptionsOverlay";
 import TrackingOverlay from "./TrackingOverlay/TrackingOverlay";
+import { Direction } from "../classes/Enums";
 
 /**
  * Component that is used for Home\Going out page
@@ -20,6 +21,7 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 	const [arrow, setArrow] = useState(false);
 	const [overlayVisible, setOverlayVisible] = useState(false);
 	const [trackingVisible, setTrackingVisible] = useState(false);
+	const [busDetailsData, setBusDetailsData] = useState([]);
 
 	useEffect(() => {
 		console.log("Getting data for " + code);
@@ -37,6 +39,16 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 			.then((res) => {
 				// console.log("GetBusStop: " + JSON.stringify(res.data));
 				setBusStopData(res.data);
+			})
+			.catch((error) => console.error(error));
+		GetBusStopDetails(
+			GoingOut
+				? Direction.GoingOut.toString()
+				: Direction.GoingHome.toString(),
+			code
+		)
+			.then((res) => {
+				setBusDetailsData(res.data);
 			})
 			.catch((error) => console.error(error));
 	};
@@ -76,6 +88,7 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 					<TrackingOverlay
 						trackingVisible={trackingVisible}
 						setTrackingVisible={setTrackingVisible}
+						busDetailsData={busDetailsData}
 					/>
 				) : (
 					<></>

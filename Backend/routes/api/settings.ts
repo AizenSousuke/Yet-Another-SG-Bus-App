@@ -1,3 +1,4 @@
+import { Direction } from './../../../Frontend/app/classes/Enums';
 import express from "express";
 const router = express.Router();
 import authMiddleware from "../../middleware/auth";
@@ -332,6 +333,55 @@ router.delete("/delete",
 			return res.status(500).json({ error: "Failed to delete settings" });
 		}
 	});
+
+/**
+ * Get the buses tracked for a certain bus stop
+ * TODO:
+ */
+router.get("/busStop/details/:direction/:code",
+	authMiddleware,
+	async (req: any, res) => {
+		console.log("Getting bus stop details from settings");
+		const userId = req.user.id;
+		const { direction, code } = req.params;
+		console.log("Bus stop details: " + userId, direction, code);
+
+		const details = await prisma.setting.findFirst({
+			where: {
+				userId: userId,
+				settingsSchema: {
+					userId: userId,
+					goingOut: {
+						every: {
+							busStop: {
+								busStopCode: code
+							}
+						}
+					},
+					goingHome: {
+						every: {
+							busStop: {
+								busStopCode: code
+							}
+						}
+					}
+				}
+			},
+			include: {
+				settingsSchema: {
+					include: {
+						goingHome: true,
+						goingOut: true
+					}
+				}
+			}
+		});
+
+		if (direction == Direction.GoingHome) {
+			// details.settingsSchema.goingHome.(src => src.)
+		}
+	}
+);
 
 /**
  * Track buses for bus stop

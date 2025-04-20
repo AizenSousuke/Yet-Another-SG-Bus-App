@@ -43,6 +43,11 @@ export const GetBusStop = async (code: string) => {
 	return response.data;
 };
 
+export const GetBusStopDetails = async (direction: string, code: string) => {
+	const response = await axios.get(`${api}/settings/busstop/details/${direction}/${code}`, data);
+	return response.data;
+};
+
 export const GetBusStopByCode = async (code: string) => {
 	const response = await axios.get(`${api}/busstops?code=${code}`, data);
 	return response.data;
@@ -215,7 +220,7 @@ export const AddCodeToSettings = async (token: string | null, code: string, Goin
 	} catch (error) {
 		console.error(error);
 	}
-}
+};
 
 export const RemoveCodeFromSettings = async (token: string | null, code: string, GoingOut = true) => {
 	try {

@@ -20,7 +20,7 @@ interface ITrackingBusDetailsData {
 const TrackingOverlay = ({
 	trackingVisible,
 	setTrackingVisible,
-	busDetailsData = [],
+	busDetailsData,
 }: ITrackingOverlay) => {
 	useEffect(() => {
 		// console.log(`TrackingOverlay mounted`);
