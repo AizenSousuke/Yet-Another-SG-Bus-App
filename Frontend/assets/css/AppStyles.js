@@ -130,6 +130,7 @@ export default StyleSheet.create({
 		textAlign: "center",
 	},
 	noData: {
+		textAlign: "center",
 		paddingTop: 8,
 	},
 	buttonGroupTextStyle: {},

@@ -32,20 +32,21 @@ const TrackingOverlay = ({
 				isVisible={trackingVisible}
 				onBackdropPress={() => setTrackingVisible(false)}
 				animationType="fade"
+				overlayStyle={{ width: "80%", height: "80%", padding: 0 }}
 			>
-				<SafeAreaView
-					style={{ display: "flex", flex: 0.5, maxWidth: "80%" }}
-				>
+				<SafeAreaView style={{ flex: 1 }}>
 					<Header
 						centerComponent={
 							<Text style={AppStyles.headerStyle}>Tracking</Text>
 						}
 						backgroundColor={ColourScheme.header}
 					/>
-					<Card containerStyle={{ margin: 0 }}>
-						<Card.Title>Tracking Buses:</Card.Title>
+					<Card containerStyle={{ flex: 1, margin: 0 }}>
+						<Card.Title>
+							Tracking these buses for this bus stop:
+						</Card.Title>
 						<Card.Divider />
-						<View style={{}}>
+						<View>
 							<ScrollView>
 								{busDetailsData.length > 0 ? (
 									busDetailsData.map((data, index) => {
