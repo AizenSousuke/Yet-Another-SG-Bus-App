@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 import authMiddleware from "../../middleware/auth";
 import PrismaSingleton from "../../classes/PrismaSingleton";
-import { BusStopService } from '@prisma/client';
+import { IBusStopBuses } from '../../models/BusStopBuses';
 const prisma = PrismaSingleton.getPrisma();
 
 /**
@@ -14,7 +14,7 @@ router.get("/", authMiddleware, async (req: any, res) => {
 	console.log("Request url: " + req.url);
 	console.log("Req user: " + JSON.stringify(req.user));
 	console.log("Req user id: " + JSON.stringify(req.user.id));
-	const settings = await prisma.setting.findUnique({
+	const settings = await prisma.setting.findFirst({
 		where: {
 			userId: req.user.id
 		},
@@ -371,8 +371,26 @@ router.get("/busStop/details/:direction/:code",
 			include: {
 				settingsSchema: {
 					include: {
-						goingHome: true,
-						goingOut: true
+						goingHome: {
+							include: {
+								busStop: true,
+								busStopServices: {
+									include: {
+										busService: true
+									}
+								}
+							}
+						},
+						goingOut: {
+							include: {
+								busStop: true,
+								busStopServices: {
+									include: {
+										busService: true
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -380,27 +398,34 @@ router.get("/busStop/details/:direction/:code",
 
 		console.log(details);
 
-		// TODO: Will get bus stop buses and the settings data and massage them to show the correct buses that are tracked.
+		// Will get bus stop buses and the settings data and massage them to show the correct buses that are tracked.
 		const busStopBuses = await prisma.busRoute.findMany({
 			where: {
 				busStopCode: code,
 			},
 		});
 
-		// TODO: Get the bus service number from the settings
-		// const data: IBusStopBuses[] = busStopBuses.map(src => ({
-		// 	BusStopCode: src.busStopCode,
-		// 	BusService: src.serviceNo,
-		// 	Tracked: details == null ? true : src.serviceNo in details.settingsSchema.goingHome.map(s => s.)
-		// }));
+		const trackedBuses = details?.settingsSchema ?
+			direction == Direction.GoingOut ?
+				details.settingsSchema?.goingOut :
+				details.settingsSchema?.goingHome :
+			[];
 
-		console.log("busStopBuses: ", busStopBuses);
+		// Get the bus service number from the settings
+		const data: IBusStopBuses[] = busStopBuses.map(src => ({
+			BusStopCode: src.busStopCode,
+			BusService: src.serviceNo,
+			Tracked: details == null ? true : src.serviceNo in trackedBuses.flatMap(s => s.busStopServices.map(b => b.busService.serviceNo)) ? true : false
+		}));
+
+		// console.log("busStopBuses: ", busStopBuses);
+		console.log("data: ", data);
 
 		if (details == null) {
 			console.log("Details is null. All busses shown.");
 			return res.json({
 				msg: "All buses shown",
-				data: []
+				data: data
 			});
 		}
 
