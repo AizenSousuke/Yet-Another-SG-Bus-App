@@ -3,6 +3,7 @@ import express from "express";
 const router = express.Router();
 import authMiddleware from "../../middleware/auth";
 import PrismaSingleton from "../../classes/PrismaSingleton";
+import { BusStopService } from '@prisma/client';
 const prisma = PrismaSingleton.getPrisma();
 
 /**
@@ -378,6 +379,22 @@ router.get("/busStop/details/:direction/:code",
 		});
 
 		console.log(details);
+
+		// TODO: Will get bus stop buses and the settings data and massage them to show the correct buses that are tracked.
+		const busStopBuses = await prisma.busRoute.findMany({
+			where: {
+				busStopCode: code,
+			},
+		});
+
+		// TODO: Get the bus service number from the settings
+		// const data: IBusStopBuses[] = busStopBuses.map(src => ({
+		// 	BusStopCode: src.busStopCode,
+		// 	BusService: src.serviceNo,
+		// 	Tracked: details == null ? true : src.serviceNo in details.settingsSchema.goingHome.map(s => s.)
+		// }));
+
+		console.log("busStopBuses: ", busStopBuses);
 
 		if (details == null) {
 			console.log("Details is null. All busses shown.");
