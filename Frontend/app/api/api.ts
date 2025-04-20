@@ -27,7 +27,8 @@ const instance = axios.create({
 	headers: data.headers
 });
 
-export const SetInterceptorsForAxiosInstance = (token: string) => {
+export const SetInterceptorsForAxiosInstance = async () => {
+	console.log("SetInterceptorsForAxiosInstance is called");
 	instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
 		const token = await AsyncStorage.getItem('x-auth-token');
 		if (token) {

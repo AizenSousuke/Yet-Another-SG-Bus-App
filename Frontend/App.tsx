@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { Linking, ToastAndroid } from "react-native";
-import { GetSettings, CheckTokenExpiry } from "./app/api/api";
+import { GetSettings, CheckTokenExpiry, SetInterceptorsForAxiosInstance } from "./app/api/api";
 import Home from "./app/components/Home";
 import { AuthProvider } from "./app/context/AuthContext";
 import { SettingsProvider } from "./app/context/SettingsContext";
@@ -76,7 +76,7 @@ const App = () => {
 	};
 
 	const _loadToken = async () => {
-		console.log("Running _loadToken");
+		console.log("Running _loadToken with authToken value: ", authToken);
 		if (!authToken) {
 			console.log("AuthToken is null");
 			await AsyncStorage.getItem(
@@ -110,6 +110,9 @@ const App = () => {
 				}
 			);
 		}
+		
+		console.log("Setting interceptor");
+		await SetInterceptorsForAxiosInstance();
 	};
 
 	const _loadSettings = async (token: string) => {
