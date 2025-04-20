@@ -1,8 +1,10 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import IHeaders from "../interfaces/IHeaders";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const api = process.env.BACKEND_API ?? Constants.expoConfig?.extra?.BACKEND_API;
+
 
 /**
  * Data to be set for the requests
@@ -17,6 +19,24 @@ var data = {
 		"Access-Control-Allow-Origin": "*",
 		"Access-Control-Allow-Headers": "*",
 	} as IHeaders,
+};
+
+const instance = axios.create({
+	baseURL: api,
+	// timeout: 10000,
+	headers: data.headers
+});
+
+export const SetInterceptorsForAxiosInstance = (token: string) => {
+	instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
+		const token = await AsyncStorage.getItem('x-auth-token');
+		if (token) {
+			config.headers['x-auth-token'] = token;
+			console.warn("Setting x-auth-token");
+		}
+
+		return config;
+	});
 };
 
 export const GetBusRouteDataWithBusStopCode = async (busNumber: string, busStopCode: string) => {
