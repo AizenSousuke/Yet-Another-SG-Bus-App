@@ -27,10 +27,13 @@ const instance = axios.create({
 	headers: data.headers
 });
 
+console.log("Creating instance of axios");
+
 export const SetInterceptorsForAxiosInstance = async () => {
 	console.log("SetInterceptorsForAxiosInstance is called");
 	instance.interceptors.request.use(async (config: AxiosRequestConfig) => {
-		const token = await AsyncStorage.getItem('x-auth-token');
+		const token = await AsyncStorage.getItem(process.env.TOKEN ?? "TOKEN");
+		console.log("Token in interceptor: ", token);
 		if (token) {
 			config.headers['x-auth-token'] = token;
 			console.warn("Setting x-auth-token");
@@ -41,36 +44,36 @@ export const SetInterceptorsForAxiosInstance = async () => {
 };
 
 export const GetBusRouteDataWithBusStopCode = async (busNumber: string, busStopCode: string) => {
-	const response = await axios.get(
-		`${api}/busroutes/${busNumber}/${busStopCode}`
+	const response = await instance.get(
+		`/busroutes/${busNumber}/${busStopCode}`
 	);
 	return response.data;
 };
 
 export const GetBusRouteData = async (busNumber: string) => {
-	const response = await axios.get(
-		`${api}/busroutes/${busNumber}`
+	const response = await instance.get(
+		`/busroutes/${busNumber}`
 	);
 	return response.data;
 };
 
 export const GetBusStopList = async () => {
-	const response = await axios.get(`${api}/busstops`, data);
+	const response = await instance.get(`/busstops`, data);
 	return response.data;
 };
 
 export const GetBusStop = async (code: string) => {
-	const response = await axios.get(`${api}/busstops/${code}`, data);
+	const response = await instance.get(`/busstops/${code}`, data);
 	return response.data;
 };
 
 export const GetBusStopDetails = async (direction: string, code: string) => {
-	const response = await axios.get(`${api}/settings/busstop/details/${direction}/${code}`, data);
+	const response = await instance.get(`/settings/busstop/details/${direction}/${code}`, data);
 	return response.data;
 };
 
 export const GetBusStopByCode = async (code: string) => {
-	const response = await axios.get(`${api}/busstops?code=${code}`, data);
+	const response = await instance.get(`/busstops?code=${code}`, data);
 	return response.data;
 };
 
@@ -85,9 +88,9 @@ export const GetNearbyBusStop = async (
 			msg: "Please provide a longitude and latitude in the JSON body",
 		};
 	}
-	const response = await axios
+	const response = await instance
 		.get(
-			`${api}/busstops/nearest?longitude=${longitude}&latitude=${latitude}&maxDistance=${maxDistance}`
+			`/busstops/nearest?longitude=${longitude}&latitude=${latitude}&maxDistance=${maxDistance}`
 		)
 		.catch((error) => {
 			console.error("Error in API: " + error);
@@ -98,8 +101,8 @@ export const GetNearbyBusStop = async (
 };
 
 export const SearchBusStop = async (term: string) => {
-	const response = await axios
-		.get(`${api}/busstops/search?term=${term}`, data)
+	const response = await instance
+		.get(`/busstops/search?term=${term}`, data)
 		.catch((error) => {
 			console.error("Error in API: " + error);
 			return null;
@@ -108,7 +111,7 @@ export const SearchBusStop = async (term: string) => {
 };
 
 export const GetBus = async (number: string) => {
-	const response = await axios.get(`${api}/bus?number=${number}`);
+	const response = await instance.get(`/bus?number=${number}`);
 	return response.data;
 };
 
@@ -116,8 +119,8 @@ export const GetSettings = async (token: string | null) => {
 	console.log("Token is: " + token);
 	data.headers["X-Auth-Token"] = token;
 	console.log("Api is: " + api);
-	return await axios
-		.get(`${api}/settings`, data)
+	return await instance
+		.get(`/settings`, data)
 		.then((res) => {
 			console.log("Settings res: " + JSON.stringify(res));
 			return res.data;
@@ -138,8 +141,8 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 		console.log("Token in SaveSettings is: " + token);
 		data.headers["X-Auth-Token"] = token;
 		console.log("X-Auth-Token in data is: " + JSON.stringify(data));
-		const prevSettings = await axios
-			.get(`${api}/settings`, data)
+		const prevSettings = await instance
+			.get(`/settings`, data)
 			.then((response) => {
 				// If there is a setting
 				var settings = response.data?.settings;
@@ -190,8 +193,8 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 
 			console.log("New data in method SaveSettings: " + JSON.stringify(data));
 
-			return await axios
-				.put(`${api}/settings/update/all`, data.body, data)
+			return await instance
+				.put(`/settings/update/all`, data.body, data)
 				.then((res) => {
 					return res.data;
 				})
@@ -210,8 +213,8 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 
 			console.log("New data: " + JSON.stringify(data));
 
-			return await axios
-				.put(`${api}/settings/update/all`, data.body, data)
+			return await instance
+				.put(`/settings/update/all`, data.body, data)
 				.then((res) => {
 					return res.data;
 				})
@@ -234,8 +237,8 @@ export const AddCodeToSettings = async (token: string | null, code: string, Goin
 		console.log("Data: " + JSON.stringify(data));
 
 		// Just by code way
-		return await axios
-			.put(`${api}/settings/update`, { code, GoingOut }, data)
+		return await instance
+			.put(`/settings/update`, { code, GoingOut }, data)
 			.then((res) => res.data)
 			.catch((error) => console.error("Error in API: " + error));
 	} catch (error) {
@@ -255,8 +258,8 @@ export const RemoveCodeFromSettings = async (token: string | null, code: string,
 		console.log("Data: " + JSON.stringify(data));
 
 		// Just by code way
-		return await axios
-			.put(`${api}/settings/remove`, { code, GoingOut }, data)
+		return await instance
+			.put(`/settings/remove`, { code, GoingOut }, data)
 			.then((res) => res.data)
 			.catch((error) => console.error("Error in API: " + error));
 	} catch (error) {
@@ -268,7 +271,7 @@ export const SignIn = async () => {
 	console.log("Signing in with facebook");
 	const fblogin =
 		await WebBrowser.openBrowserAsync(
-			`${api}/auth/facebook`
+			`/auth/facebook`
 		);
 
 	// If browser is opened
@@ -281,7 +284,7 @@ export const SignIn = async () => {
 };
 
 export const LogOut = async () => {
-	const result = await axios.get(`${api}/auth/logout`, data);
+	const result = await instance.get(`/auth/logout`, data);
 	// returns true if logged out successfully
 	return result.data;
 };
@@ -293,7 +296,7 @@ export const CheckTokenExpiry = async (token: string | null) => {
 		console.warn("Default token has expired");
 		return { msg: "Token was not provided.", expired: true };
 	}
-	const result = await axios.get(`${api}/auth/checkTokenExpiry`, data);
+	const result = await instance.get(`/auth/checkTokenExpiry`, data);
 	return result.data;
 };
 

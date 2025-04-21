@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import { View, Text } from "react-native";
 import { Switch } from "react-native-elements";
 import ColorScheme from "../../settings/colourScheme.json";
+import { ITrackingBusDetailsData } from "../TrackingOverlay/TrackingOverlay";
 
-interface ITrackingBusDetails {
-	isTracked: boolean;
-	busService: string;
-}
-
-const TrackingBusDetails = ({ isTracked = true }: ITrackingBusDetails) => {
+const TrackingBusDetails = ({
+	busStopCode,
+	busService,
+	isTracked = true,
+	setTrackingForBus,
+}: ITrackingBusDetailsData) => {
 	useEffect(() => {
 		console.log(`TrackingBusDetails mounted`);
 	}, []);
@@ -18,14 +19,24 @@ const TrackingBusDetails = ({ isTracked = true }: ITrackingBusDetails) => {
 			style={{
 				display: "flex",
 				flexDirection: "row",
-				alignItems: "center",
-				minWidth: "70%",
-				borderBottomColor: "black",
+				borderBottomColor: "lightgrey",
 				borderBottomWidth: 0.2,
+				padding: 10,
 			}}
 		>
-			<Text style={{ flex: 2, marginHorizontal: 10 }}>Bus Number</Text>
-			<Text style={{ flex: 4, marginHorizontal: 10 }}>Bus Stop Name</Text>
+			<Text style={{ flex: 2, marginHorizontal: 10, fontSize: 16 }}>
+				{busService}
+			</Text>
+			<Text
+				style={{
+					flex: 3,
+					marginHorizontal: 10,
+					fontSize: 16,
+					fontWeight: "100",
+				}}
+			>
+				Bus Stop: {busStopCode}
+			</Text>
 			<Switch
 				style={{ flex: 1, marginLeft: 10 }}
 				color={ColorScheme.header}

@@ -413,9 +413,9 @@ router.get("/busStop/details/:direction/:code",
 
 		// Get the bus service number from the settings
 		const data: IBusStopBuses[] = busStopBuses.map(src => ({
-			BusStopCode: src.busStopCode,
-			BusService: src.serviceNo,
-			Tracked: details == null ? true : src.serviceNo in trackedBuses.flatMap(s => s.busStopServices.map(b => b.busService.serviceNo)) ? true : false
+			busStopCode: src.busStopCode,
+			busService: src.serviceNo,
+			tracked: details == null ? true : src.serviceNo in trackedBuses.flatMap(s => s.busStopServices.map(b => b.busService.serviceNo)) ? true : false
 		}));
 
 		// console.log("busStopBuses: ", busStopBuses);

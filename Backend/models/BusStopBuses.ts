@@ -1,11 +1,11 @@
 export interface IBusStopBuses {
-    BusStopCode: string;
-    BusService: string;
-    Tracked: boolean;
+    busStopCode: string;
+    busService: string;
+    tracked: boolean;
 }
 
 export class BusStopBuses implements IBusStopBuses {
-    BusStopCode: string;
-    BusService: string;
-    Tracked: boolean = false;
+    busStopCode: string;
+    busService: string;
+    tracked: boolean = false;
 }

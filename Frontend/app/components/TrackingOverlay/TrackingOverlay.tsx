@@ -12,10 +12,25 @@ interface ITrackingOverlay {
 	busDetailsData: ITrackingBusDetailsData[];
 }
 
-interface ITrackingBusDetailsData {
+export interface ITrackingBusDetailsData {
+	busStopCode: string;
 	busService: string;
 	isTracked: boolean;
+	setTrackingForBus: (
+		busStopCode: string,
+		busService: string,
+		tracked: boolean
+	) => void;
 }
+
+const setTrackingForBus = (
+	busStopCode: string,
+	busService: string,
+	tracked: boolean
+) => {
+	// TODO: Update the tracked bus state
+	// Call api straight and it should update the app state when settings is refreshed
+};
 
 const TrackingOverlay = ({
 	trackingVisible,
@@ -49,15 +64,34 @@ const TrackingOverlay = ({
 						<View>
 							<ScrollView>
 								{busDetailsData.length > 0 ? (
-									busDetailsData.map((data, index) => {
-										return (
-											<TrackingBusDetails
-												key={index}
-												busService={data.busService}
-												isTracked={data.isTracked}
-											/>
-										);
-									})
+									busDetailsData.map(
+										(
+											data: ITrackingBusDetailsData,
+											index
+										) => {
+											return (
+												<TrackingBusDetails
+													key={index}
+													busStopCode={
+														data.busStopCode
+													}
+													busService={data.busService}
+													isTracked={data.isTracked}
+													setTrackingForBus={(
+														busStopCode: string,
+														busService: string,
+														tracked: boolean
+													) =>
+														setTrackingForBus(
+															busStopCode,
+															busService,
+															tracked
+														)
+													}
+												/>
+											);
+										}
+									)
 								) : (
 									<Text style={AppStyles.noData}>
 										No Bus Services
