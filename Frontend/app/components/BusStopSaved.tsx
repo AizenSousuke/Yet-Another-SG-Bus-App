@@ -62,6 +62,7 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 				onPress={() => {
 					setIsCollapsed(!isCollapsed);
 					setArrow(!arrow);
+					(async () => await getBusStopData())()
 				}}
 			>
 				<Icon

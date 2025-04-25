@@ -30,6 +30,7 @@ const setTrackingForBus = (
 ) => {
 	// TODO: Update the tracked bus state
 	// Call api straight and it should update the app state when settings is refreshed
+	console.log(busStopCode, busService, tracked);
 };
 
 const TrackingOverlay = ({
@@ -63,6 +64,7 @@ const TrackingOverlay = ({
 						<Card.Divider />
 						<View>
 							<ScrollView>
+								{/* <Text>{JSON.stringify(busDetailsData)}</Text> */}
 								{busDetailsData.length > 0 ? (
 									busDetailsData.map(
 										(
