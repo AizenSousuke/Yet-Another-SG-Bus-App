@@ -41,6 +41,7 @@ const TrackingBusDetails = ({
 				style={{ flex: 1, marginLeft: 10 }}
 				color={ColorScheme.header}
 				value={isTracked}
+				onValueChange={(value) => setTrackingForBus(busStopCode, busService, value)}
 			/>
 		</View>
 	);

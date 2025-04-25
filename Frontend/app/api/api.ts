@@ -271,7 +271,7 @@ export const SignIn = async () => {
 	console.log("Signing in with facebook");
 	const fblogin =
 		await WebBrowser.openBrowserAsync(
-			`/auth/facebook`
+			`${api}/auth/facebook`
 		);
 
 	// If browser is opened
