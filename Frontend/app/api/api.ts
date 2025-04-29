@@ -3,6 +3,7 @@ import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import IHeaders from "../interfaces/IHeaders";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Direction } from "../classes/Enums";
 const api = process.env.BACKEND_API ?? Constants.expoConfig?.extra?.BACKEND_API;
 
 
@@ -282,6 +283,14 @@ export const SignIn = async () => {
 		);
 	}
 };
+
+export const TrackBusAtBusStop = async (direction: Direction, code: string, serviceNo: string) => {
+	var res = await instance.post(`/setting/update/direction/code/track`, {
+		direction: direction,
+		code: code,
+		serviceNo: serviceNo
+	})
+}
 
 export const LogOut = async () => {
 	const result = await instance.get(`/auth/logout`, data);
