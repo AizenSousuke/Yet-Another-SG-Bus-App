@@ -48,9 +48,10 @@ const BusStopSaved = ({ code, GoingOut }: { code: any; GoingOut: boolean }) => {
 			code
 		)
 			.then((res) => {
+				console.warn(res.data);
 				setBusDetailsData(res.data);
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => console.error("Error from GetBusStopDetails", error));
 	};
 
 	return (

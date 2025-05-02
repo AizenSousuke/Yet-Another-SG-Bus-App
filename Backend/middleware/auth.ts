@@ -10,7 +10,7 @@ const Auth = async (req, res, next) => {
 	try {
 		// Get token from headers
 		console.log(req.headers);
-		const token = req.header("X-Auth-Token");
+		const token = req.header("x-auth-token");
 		console.log("Token in req header: " + JSON.stringify(token));
 
 		// Check if no token is provided

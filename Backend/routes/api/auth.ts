@@ -97,9 +97,9 @@ router.get(
  */
 router.get("/checkTokenExpiry", async (req: any, res) => {
 	console.log(
-		"Checking Token Expiry for X-Auth-Token: " + req.header("X-Auth-Token")
+		"Checking Token Expiry for x-auth-token: " + req.header("x-auth-token")
 	);
-	if (!req.header("X-Auth-Token")) {
+	if (!req.header("x-auth-token")) {
 		return res
 			.status(200)
 			.json({ msg: "Token has expired", expired: true });
@@ -107,7 +107,7 @@ router.get("/checkTokenExpiry", async (req: any, res) => {
 
 	const user = await prisma.user.findFirst({
 		where: {
-			token: req.header("X-Auth-Token"),
+			token: req.header("x-auth-token"),
 		}
 	});
 

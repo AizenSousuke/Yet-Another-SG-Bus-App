@@ -16,7 +16,7 @@ var data = {
 	headers: {
 		Accept: "application/json",
 		"Content-Type": "application/json",
-		"X-Auth-Token": null as string | null,
+		"x-auth-token": null as string | null,
 		"Access-Control-Allow-Origin": "*",
 		"Access-Control-Allow-Headers": "*",
 	} as IHeaders,
@@ -37,7 +37,8 @@ export const SetInterceptorsForAxiosInstance = async () => {
 		console.log("Token in interceptor: ", token);
 		if (token) {
 			config.headers['x-auth-token'] = token;
-			console.warn("Setting x-auth-token");
+			data.headers["x-auth-token"] = token;
+			// console.warn("Setting x-auth-token");
 		}
 
 		return config;
@@ -118,7 +119,7 @@ export const GetBus = async (number: string) => {
 
 export const GetSettings = async (token: string | null) => {
 	console.log("Token is: " + token);
-	data.headers["X-Auth-Token"] = token;
+	data.headers["x-auth-token"] = token;
 	console.log("Api is: " + api);
 	return await instance
 		.get(`/settings`, data)
@@ -140,8 +141,8 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 		}
 
 		console.log("Token in SaveSettings is: " + token);
-		data.headers["X-Auth-Token"] = token;
-		console.log("X-Auth-Token in data is: " + JSON.stringify(data));
+		data.headers["x-auth-token"] = token;
+		console.log("x-auth-token in data is: " + JSON.stringify(data));
 		const prevSettings = await instance
 			.get(`/settings`, data)
 			.then((response) => {
@@ -178,7 +179,7 @@ export const SaveSettings = async (token: string | null, code: string, GoingOut 
 			});
 
 		console.log("prevSettings: " + JSON.stringify(prevSettings));
-		console.log("Token is still: " + data.headers["X-Auth-Token"]);
+		console.log("Token is still: " + data.headers["x-auth-token"]);
 
 		if (GoingOut) {
 			const newSettings = Object.assign({}, prevSettings, {
@@ -234,7 +235,7 @@ export const AddCodeToSettings = async (token: string | null, code: string, Goin
 		}
 
 		console.log("Token in AddCodeToSettings is: " + token);
-		data.headers["X-Auth-Token"] = token;
+		data.headers["x-auth-token"] = token;
 		console.log("Data: " + JSON.stringify(data));
 
 		// Just by code way
@@ -255,7 +256,7 @@ export const RemoveCodeFromSettings = async (token: string | null, code: string,
 		}
 
 		console.log("Token in RemoveCodeFromSettings is: " + token);
-		data.headers["X-Auth-Token"] = token;
+		data.headers["x-auth-token"] = token;
 		console.log("Data: " + JSON.stringify(data));
 
 		// Just by code way
@@ -300,7 +301,7 @@ export const LogOut = async () => {
 
 export const CheckTokenExpiry = async (token: string | null) => {
 	console.log("CheckTokenExpiry - Checking token expiry: " + token);
-	data.headers["X-Auth-Token"] = token;
+	data.headers["x-auth-token"] = token;
 	if (!token) {
 		console.warn("Default token has expired");
 		return { msg: "Token was not provided.", expired: true };

@@ -42,7 +42,7 @@ describe("Auth Middleware", () => {
 
         const response = await request(app)
             .get('/api/user')
-            .set('X-Auth-Token', 'valid-token');  // Set the token in the header
+            .set('x-auth-token', 'valid-token');  // Set the token in the header
 
         expect(response.status).toBe(401);
         expect(response.body.msg).not.toBeNull();
@@ -69,7 +69,7 @@ describe("Auth Middleware", () => {
 
         const response = await request(app)
             .get('/api/user')
-            .set('X-Auth-Token', 'valid-token');   // Set the token in the header
+            .set('x-auth-token', 'valid-token');   // Set the token in the header
 
         expect(response.status).toBe(200);
         expect(response.body.msg).not.toBeNull();
