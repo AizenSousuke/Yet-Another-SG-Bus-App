@@ -71,6 +71,7 @@ export const GetBusStop = async (code: string) => {
 
 export const GetBusStopDetails = async (direction: string, code: string) => {
 	const response = await instance.get(`/settings/busstop/details/${direction}/${code}`, data);
+	console.warn("GetBusStopDetails", response.data);
 	return response.data;
 };
 

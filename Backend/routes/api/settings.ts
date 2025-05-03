@@ -396,7 +396,7 @@ router.get("/busStop/details/:direction/:code",
 			}
 		});
 
-		console.log(details);
+		console.log("Details: ", details);
 
 		// Will get bus stop buses and the settings data and massage them to show the correct buses that are tracked.
 		const busStopBuses = await prisma.busRoute.findMany({
@@ -415,7 +415,7 @@ router.get("/busStop/details/:direction/:code",
 		const data: IBusStopBuses[] = busStopBuses.map(src => ({
 			busStopCode: src.busStopCode,
 			busService: src.serviceNo,
-			tracked: details == null ? true : src.serviceNo in trackedBuses.flatMap(s => s.busStopServices.map(b => b.busService.serviceNo)) ? true : false
+			tracked: details == null || trackedBuses.length == 0 ? true : src.serviceNo in trackedBuses.flatMap(s => s.busStopServices.map(b => b.busService.serviceNo)) ? true : false
 		}));
 
 		// console.log("busStopBuses: ", busStopBuses);
@@ -432,6 +432,11 @@ router.get("/busStop/details/:direction/:code",
 		if (direction == Direction.GoingHome) {
 			// details.settingsSchema.goingHome.(src => src.)
 		}
+
+		return res.json({
+			msg: "Some busses is shown",
+			data: data
+		});
 	}
 );
 
