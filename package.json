@@ -13,7 +13,7 @@
 		"testbackend": "cd backend && yarn test",
 		"testfrontend": "cd frontend && yarn test",
 		"test": "concurrently \"cd backend && yarn test\" \"cd frontend && yarn test\"",
-		"postinstall": "cd Backend && yarn install"
+		"postinstall": "concurrently \"cd frontend && yarn install\" \"cd Backend && yarn install\""
 	},
 	"devDependencies": {
 		"concurrently": "^6.4.0"
