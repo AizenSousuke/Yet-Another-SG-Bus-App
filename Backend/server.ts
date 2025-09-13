@@ -25,21 +25,23 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 
 const prisma = PrismaSingleton.getPrisma();
 
-if (process.env.NODE_ENV !== "test") {
-	// To get HTTPS
-	// var server = https.createServer(options, app);
-	// server.listen(PORT, (error, result) => {
-	// 	console.log(`HTTPS Server started on port ${PORT}`);
-	// });
-
-	// Normal way to get http
-	app.listen(PORT, () => {
-		console.log("Listening on port %s", PORT);
-	});
-}
-
 // Connect Database
-async () => await connectDB();
+(async () => {
+	await connectDB();
+
+	if (process.env.NODE_ENV !== "test") {
+		// To get HTTPS
+		// var server = https.createServer(options, app);
+		// server.listen(PORT, (error, result) => {
+		// 	console.log(`HTTPS Server started on port ${PORT}`);
+		// });
+
+		// Normal way to get http
+		app.listen(PORT, () => {
+			console.log("Listening on port %s", PORT);
+		});
+	}
+})();
 
 // Adds middlewares
 // Add body-parser middleware
@@ -145,7 +147,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (user, done) => {
 	try {
-		console.log(`Getting user: ${JSON.stringify(user)}`)
+		console.log(`Getting user: ${JSON.stringify(user)}`);
 		const prismaUser = await prisma.user.findUniqueOrThrow({
 			where: {
 				email: user.email
