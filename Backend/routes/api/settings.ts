@@ -4,7 +4,8 @@ const router = express.Router();
 import authMiddleware from "../../middleware/auth";
 import PrismaSingleton from "../../classes/PrismaSingleton";
 import { IBusStopBuses } from '../../models/BusStopBuses';
-const prisma = PrismaSingleton.getPrisma();
+import prisma from "../../classes/PrismaSingleton";
+// const prisma = PrismaSingleton.getPrisma();
 
 /**
  * Get the settings object

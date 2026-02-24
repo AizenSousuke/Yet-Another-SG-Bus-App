@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken";
 import config from "config";
 import { PrismaClient } from "@prisma/client";
 import PrismaSingleton from "../classes/PrismaSingleton";
+import prisma from "../classes/PrismaSingleton";
 
-const prisma: PrismaClient = PrismaSingleton.getPrisma();
+// const prisma: PrismaClient = PrismaSingleton.getPrisma();
 
 const Auth = async (req, res, next) => {
 	console.log("Running middleware");

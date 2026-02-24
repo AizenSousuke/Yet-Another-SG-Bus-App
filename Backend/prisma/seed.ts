@@ -6,11 +6,12 @@
 import PrismaSingleton from "../classes/PrismaSingleton";
 import { getPromisesForAllBusServicesFromLTADataMallAPI, getPromisesForAllBusStopsFromLTADataMallAPI } from "../routes/api/admin";
 import { getPromisesForAllBusRoutesFromLTADataMallAPI } from "../routes/api/busroutes";
+import prisma from "../classes/PrismaSingleton";
 
 (async () => {
     // Using prisma.$transaction to do all db operations in 1 call
     console.log("Seeding data in MongoDB");
-    const prisma = PrismaSingleton.getPrisma();
+    // const prisma = PrismaSingleton.getPrisma();
 
     console.log("Starting transaction");
 

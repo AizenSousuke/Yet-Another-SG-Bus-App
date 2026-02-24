@@ -8,8 +8,9 @@ import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
 import passport from "passport";
 import PrismaSingleton from "../../classes/PrismaSingleton";
+import prisma from "../../classes/PrismaSingleton";
 
-const prisma = PrismaSingleton.getPrisma();
+// const prisma = PrismaSingleton.getPrisma();
 
 router.get('/test', async (req: any, res) => {
 	return res.status(200).json("OK");

@@ -4,7 +4,8 @@ import { check, validationResult } from "express-validator";
 import axios from "axios";
 import config from "config";
 import PrismaSingleton from "../../classes/PrismaSingleton";
-const prisma = PrismaSingleton.getPrisma();
+import prisma from "../../classes/PrismaSingleton";
+// const prisma = PrismaSingleton.getPrisma();
 
 const header = {
 	Accept: "application/json",

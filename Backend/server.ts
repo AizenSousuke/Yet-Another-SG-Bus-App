@@ -7,6 +7,7 @@ import cors from "cors";
 import config from "config";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import prisma from "./classes/PrismaSingleton";
 
 // Add self signed key for https
 // const https = require("https");
@@ -23,7 +24,7 @@ import passport from "passport";
 import PrismaSingleton from "./classes/PrismaSingleton";
 const FacebookStrategy = require("passport-facebook").Strategy;
 
-const prisma = PrismaSingleton.getPrisma();
+// const prisma = PrismaSingleton.getPrisma();
 
 // Connect Database
 (async () => {

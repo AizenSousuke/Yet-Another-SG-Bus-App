@@ -6,7 +6,8 @@ import bcrypt from "bcryptjs";
 import config from "config";
 import jwt from "jsonwebtoken";
 import PrismaSingleton from "../../classes/PrismaSingleton";
-const prisma = PrismaSingleton.getPrisma();
+import prisma from "../../classes/PrismaSingleton";
+// const prisma = PrismaSingleton.getPrisma();
 
 router.get("/", async (req, res) => {
 	try {

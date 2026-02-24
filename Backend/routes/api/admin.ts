@@ -9,7 +9,8 @@ import mongoose from "mongoose";
 import { check, validationResult } from "express-validator";
 import Util from "../../util/Util";
 import PrismaSingleton from "../../classes/PrismaSingleton";
-const prisma = PrismaSingleton.getPrisma();
+import prisma from "../../classes/PrismaSingleton";
+// const prisma = PrismaSingleton.getPrisma();
 
 const header = {
 	Accept: "application/json",

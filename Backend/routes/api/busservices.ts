@@ -8,7 +8,8 @@ const BusServices = require("../../models/DataMall/BusServices").default;
 const router = express.Router();
 const config = require("config");
 const auth = require("../../middleware/auth");
-const prisma = PrismaSingleton.getPrisma();
+import prisma from "../../classes/PrismaSingleton";
+// const prisma = PrismaSingleton.getPrisma();
 
 const header = {
 	Accept: "application/json",
