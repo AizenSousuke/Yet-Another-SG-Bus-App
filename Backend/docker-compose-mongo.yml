@@ -1,0 +1,9 @@
+services:
+    mongodb:
+        image: mongodb/mongodb-community-server:latest
+        container_name: mongodb
+        ports:
+            - "27017:27017"
+        command: ["--replSet", "replicaSet"]
+        volumes:
+            - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh:ro
